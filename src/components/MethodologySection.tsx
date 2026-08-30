@@ -48,17 +48,17 @@ export const MethodologySection: React.FC = () => {
               <h3>2. Technical Rules &amp; Momentum Filter</h3>
             </div>
             <p className="text-xs text-slate-600 leading-relaxed">
-              Equities require at least <strong className="text-slate-800">252 valid daily price bars</strong> and are evaluated against 4 technical rules (1 point each, technical score from 0 to 4):
+              Equities are evaluated against seven quantitative eligibility and technical screening rules:
             </p>
             <ul className="text-xs text-slate-600 mt-2 space-y-1 list-disc list-inside">
-              <li><strong className="text-slate-700">Rule 1:</strong> Latest close above 200-day SMA.</li>
-              <li><strong className="text-slate-700">Rule 2:</strong> 50-day SMA above 200-day SMA.</li>
-              <li><strong className="text-slate-700">Rule 3:</strong> MACD(12, 26, 9) line above the signal line.</li>
-              <li><strong className="text-slate-700">Rule 4:</strong> RSI(14) between 45 and 70 inclusive.</li>
+              <li><strong className="text-slate-700">Data Sufficiency:</strong> At least 252 valid daily price bars are required for indicator computation and covariance estimation.</li>
+              <li><strong className="text-slate-700">Rule 1 (Price Trend):</strong> Latest close &gt; 200-day SMA.</li>
+              <li><strong className="text-slate-700">Rule 2 (Moving Average Cross):</strong> 50-day SMA &gt; 200-day SMA.</li>
+              <li><strong className="text-slate-700">Rule 3 (Momentum):</strong> MACD(12, 26, 9) line &gt; MACD signal line.</li>
+              <li><strong className="text-slate-700">Rule 4 (Oscillator Band):</strong> RSI-14 is between 45 and 70 inclusive.</li>
+              <li><strong className="text-slate-700">Technical Score:</strong> One point awarded per satisfied rule, producing an integer score from 0 to 4.</li>
+              <li><strong className="text-slate-700">Eligibility &amp; Fallback:</strong> A stock is Eligible when it has &ge; 252 daily bars and a technical score &ge; 2. If fewer than 10 holdings are eligible, the optimizer transparently includes the highest-scoring data-sufficient fallback candidates and labels them as fallback holdings.</li>
             </ul>
-            <p className="text-xs text-slate-600 leading-relaxed mt-2">
-              <strong className="text-slate-700">Eligibility:</strong> A stock is classified as Eligible when it has sufficient data (&ge; 252 bars) and a technical score &ge; 2. If fewer than 10 holdings are eligible, the optimizer transparently includes the highest-scoring data-sufficient fallback candidates and labels them as fallback holdings.
-            </p>
           </div>
 
           {/* Pillar 3: Minimum-Variance Optimization */}
