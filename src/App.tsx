@@ -201,7 +201,15 @@ export default function App() {
         />
 
         {/* 6. Executive Commentary Section */}
-        <ExecutiveCommentary />
+        <ExecutiveCommentary
+          apiKeys={apiKeys}
+          onUpdateKeys={handleUpdateKeys}
+          portfolioDataMap={portfolioDataMap}
+          screeningItems={screeningItems}
+          optimizationResult={optimizationResult}
+          latestQuotes={latestQuotes}
+          quoteRefreshSummary={quoteRefreshSummary}
+        />
 
         {/* 7. Methodology and Limitations Section */}
         <MethodologySection />

@@ -257,3 +257,94 @@ export interface OptimizationResult {
   commonDateCount: number;
 }
 
+export interface ExecutiveCommentaryResult {
+  portfolio_overview: string;
+  signal_summary: string;
+  primary_risks: string[];
+  data_limitations: string[];
+  committee_questions: string[];
+  generatedAt?: string;
+  modelUsed?: string;
+}
+
+export interface ReviewHoldingItem {
+  ticker: string;
+  company: string;
+  category: string;
+  inclusionReason: string;
+  technicalScore: number | null;
+  signalStatus: string;
+  weightPercentage: string;
+  dollarAllocation: string;
+  latestPrice: string;
+  priceSource: string;
+}
+
+export interface PortfolioReviewObject {
+  strategy: {
+    name: string;
+    thesis: string;
+    universeSize: number;
+    targetCapital: string;
+    singleHoldingWeightCap: string;
+    optimizationObjective: string;
+  };
+  dataSourceStatus: {
+    historicalDataStatus: string;
+    commonTradingDaysCount: number;
+    startDate: string | null;
+    endDate: string | null;
+    latestQuoteFeedRefreshed: boolean;
+    latestQuoteSuccessCount: number;
+    latestQuoteTotalAttempted: number;
+    dataFailuresOrErrors: string[];
+  };
+  holdingsSummary: {
+    totalCandidatesScreened: number;
+    eligibleHoldingsCount: number;
+    includedHoldingsCount: number;
+    fallbackCount: number;
+    isFallbackActive: boolean;
+    holdings: ReviewHoldingItem[];
+  };
+  portfolioMetrics: {
+    optimizerStatus: string;
+    minVarianceAnnualizedVolatility: string;
+    equalWeightAnnualizedVolatility: string;
+    volatilityDelta: string;
+    relativeRiskReductionPercent: string;
+    minVarianceCumulativeReturn: string;
+    minVarianceAnnualizedReturn: string;
+    minVarianceSharpeRatio: string;
+    minVarianceMaxDrawdown: string;
+  };
+  equalWeightComparison: {
+    cumulativeReturn: string;
+    annualizedReturn: string;
+    annualizedVolatility: string;
+    sharpeRatio: string;
+    maxDrawdown: string;
+  } | null;
+  benchmarkComparison: {
+    benchmarkTicker: string;
+    cumulativeReturn: string;
+    annualizedReturn: string;
+    annualizedVolatility: string;
+    sharpeRatio: string;
+    maxDrawdown: string;
+  } | null;
+  concentrationAndAllocationFlags: {
+    maxWeightConstraintPassed: boolean;
+    largestHoldingWeight: string;
+    smallestHoldingWeight: string;
+    categoryAllocations: { category: string; weightPercent: string; assetCount: number }[];
+  };
+  fallbackInclusionFlags: {
+    isFallbackActive: boolean;
+    fallbackAssetCount: number;
+    fallbackAssets: string[];
+    fallbackReasonMessage: string;
+  };
+  knownLimitationsAndDataFailures: string[];
+}
+
