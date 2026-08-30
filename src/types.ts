@@ -1,22 +1,17 @@
-export interface MetricCardProps {
-  id: string;
-  title: string;
-  subtitle: string;
-  targetDescription: string;
-  iconName: 'dollar' | 'layers' | 'activity' | 'status';
+export interface StockCandidate {
+  ticker: string;
+  company: string;
+  category: string;
 }
 
-export interface CandidateStockMock {
+export interface BenchmarkConfig {
   ticker: string;
   name: string;
-  subIndustry: string;
-  marketCap: string;
+  description: string;
 }
 
-export interface PortfolioAllocationMock {
-  ticker: string;
-  name: string;
-  targetWeight: string;
-  targetAmount: string;
-  subIndustry: string;
+export interface SessionApiKeys {
+  twelveDataApiKey: string;
+  openRouterApiKey: string;
+  openRouterModel: string;
 }
