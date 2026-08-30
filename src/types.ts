@@ -72,3 +72,145 @@ export interface SymbolDataRecord {
 
 export type SymbolDataMap = Record<string, SymbolDataRecord>;
 
+export type EligibilityStatus = 'Eligible' | 'Ineligible' | 'Data unavailable';
+export type TechnicalRatingLabel = 'Constructive' | 'Mixed' | 'Caution' | 'Data unavailable';
+
+export interface TechnicalScoreBreakdown {
+  priceAboveSma200: boolean;
+  sma50AboveSma200: boolean;
+  macdAboveSignal: boolean;
+  rsiInRange: boolean;
+}
+
+export interface CandidateScreeningItem {
+  ticker: string;
+  company: string;
+  category: string;
+  hasSufficientData: boolean;
+  validBarCount: number;
+  latestPrice: number | null;
+  sma50: number | null;
+  sma200: number | null;
+  macd: number | null;
+  macdSignal: number | null;
+  macdHistogram: number | null;
+  rsi14: number | null;
+  trailing60Return: number | null;
+  annualizedVolatility: number | null;
+  technicalScore: number | null;
+  scoreBreakdown: TechnicalScoreBreakdown | null;
+  smaComparisonLabel: 'Above' | 'Below' | 'Data unavailable';
+  macdStatusLabel: 'Bullish' | 'Bearish' | 'Data unavailable';
+  technicalLabel: TechnicalRatingLabel;
+  eligibility: EligibilityStatus;
+}
+
+export interface DailyReturn {
+  date: string;
+  value: number;
+}
+
+export interface AlignedReturnMatrix {
+  dates: string[];
+  tickers: string[];
+  matrix: number[][]; // rows: dates, cols: tickers
+  seriesByTicker: Record<string, number[]>;
+  startDate: string | null;
+  endDate: string | null;
+  dateCount: number;
+  isSufficient: boolean;
+  warning?: string;
+}
+
+export interface CovarianceMatrixResult {
+  tickers: string[];
+  dailyCovariance: number[][];
+  annualizedCovariance: number[][];
+  sampleSize: number;
+  isPositiveDefinite: boolean;
+}
+
+export interface CorrelationMatrixResult {
+  tickers: string[];
+  correlationMatrix: number[][];
+}
+
+export interface PortfolioPerformanceMetrics {
+  cumulativeReturn: number | null;
+  annualizedReturn: number | null;
+  annualizedVolatility: number | null;
+  maxDrawdown: number | null;
+  sharpeRatio: number | null;
+  riskFreeRateAssumption: number;
+  observationCount: number;
+  startDate: string | null;
+  endDate: string | null;
+}
+
+export interface PortfolioReadinessSummary {
+  eligibleTickers: string[];
+  eligibleCount: number;
+  totalCandidates: number;
+  isEligibleBelowThreshold: boolean;
+  fallbackNotice?: string;
+  commonDateCount: number;
+  startDate: string | null;
+  endDate: string | null;
+  isHistorySufficient: boolean;
+  covarianceStatus: 'Ready' | 'Insufficient Dates' | 'No Eligible Stocks' | 'Data Unavailable';
+  alignedReturns: AlignedReturnMatrix | null;
+  covarianceMatrix: CovarianceMatrixResult | null;
+  correlationMatrix: CorrelationMatrixResult | null;
+  equalWeightPerformance: PortfolioPerformanceMetrics | null;
+  benchmarkPerformance: PortfolioPerformanceMetrics | null;
+  benchmarkAvailability: 'Available' | 'Aligned' | 'Insufficient Data' | 'Unavailable';
+}
+
+export type InclusionReason = 'Eligible Technical Pass' | 'Fallback included';
+
+export type OptimizerSignalStatus = 'Constructive' | 'Mixed' | 'Caution' | 'Data Unavailable';
+
+export interface OptimizedHolding {
+  ticker: string;
+  company: string;
+  category: string;
+  inclusionReason: InclusionReason;
+  technicalScore: number | null;
+  weight: number; // Decimal (e.g. 0.125 for 12.50%)
+  dollarAllocation: number; // Scaled to $1,000,000
+  latestPrice: number | null;
+  signalStatus: OptimizerSignalStatus;
+  shares: number | null;
+}
+
+export interface OptimizerValidation {
+  isValid: boolean;
+  weightSum: number;
+  weightSumTolerancePassed: boolean;
+  noNegativeWeights: boolean;
+  maxWeightConstraintPassed: boolean;
+  allHoldingsWeighted: boolean;
+  largestWeight: number;
+  smallestWeight: number;
+  validationErrors: string[];
+}
+
+export interface OptimizationResult {
+  status: 'Optimal' | 'Validation Fallback' | 'Insufficient Holdings' | 'No Data';
+  statusMessage: string;
+  iterations: number;
+  convergenceReached: boolean;
+  finalGradientNorm: number;
+  holdings: OptimizedHolding[];
+  includedCount: number;
+  fallbackCount: number;
+  minVarianceVolatility: number | null;
+  equalWeightVolatility: number | null;
+  volatilityDelta: number | null;
+  relativeRiskReduction: number | null;
+  validation: OptimizerValidation;
+  totalCapital: number;
+  tickers: string[];
+  isFallbackActive: boolean;
+}
+

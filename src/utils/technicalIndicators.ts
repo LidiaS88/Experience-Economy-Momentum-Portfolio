@@ -1,4 +1,15 @@
-import { PriceBar, MACDResult, TechnicalSummaryMetrics } from '../types';
+import {
+  PriceBar,
+  MACDResult,
+  TechnicalSummaryMetrics,
+  CandidateScreeningItem,
+  TechnicalScoreBreakdown,
+  TechnicalRatingLabel,
+  EligibilityStatus,
+  SymbolDataMap,
+} from '../types';
+import { PORTFOLIO_UNIVERSE } from '../config';
+import { MIN_REQUIRED_DAILY_BARS } from '../services/portfolioLoader';
 
 /**
  * Calculates the Simple Moving Average (SMA) of close prices over a given period.
@@ -374,4 +385,133 @@ export function calculateAllTechnicalMetrics(rows: readonly PriceBar[]): Technic
     trailing60Return,
     annualizedVolatility,
   };
+}
+
+/**
+ * Screens a single candidate asset based on price series observations and pure technical rules.
+ * 
+ * Rules:
+ * - Requires at least MIN_REQUIRED_DAILY_BARS (252) observations.
+ * - Score Rule 1 (+1): Latest Close > SMA 200
+ * - Score Rule 2 (+1): SMA 50 > SMA 200
+ * - Score Rule 3 (+1): MACD Line > MACD Signal Line
+ * - Score Rule 4 (+1): RSI(14) between 45 and 70 inclusive
+ * 
+ * Eligibility:
+ * - Eligible: Sufficient Data AND Technical Score >= 2
+ * - Ineligible: Sufficient Data AND Technical Score < 2
+ * - Data unavailable: < 252 valid daily observations
+ */
+export function screenCandidate(
+  ticker: string,
+  company: string,
+  category: string,
+  rows: readonly PriceBar[]
+): CandidateScreeningItem {
+  const hasSufficientData = Boolean(rows && rows.length >= MIN_REQUIRED_DAILY_BARS);
+  const validBarCount = rows ? rows.length : 0;
+
+  if (!hasSufficientData) {
+    return {
+      ticker,
+      company,
+      category,
+      hasSufficientData: false,
+      validBarCount,
+      latestPrice: null,
+      sma50: null,
+      sma200: null,
+      macd: null,
+      macdSignal: null,
+      macdHistogram: null,
+      rsi14: null,
+      trailing60Return: null,
+      annualizedVolatility: null,
+      technicalScore: null,
+      scoreBreakdown: null,
+      smaComparisonLabel: 'Data unavailable',
+      macdStatusLabel: 'Data unavailable',
+      technicalLabel: 'Data unavailable',
+      eligibility: 'Data unavailable',
+    };
+  }
+
+  const metrics = calculateAllTechnicalMetrics(rows);
+
+  const priceAboveSma200 = metrics.latestClose !== null && metrics.sma200 !== null && metrics.latestClose > metrics.sma200;
+  const sma50AboveSma200 = metrics.sma50 !== null && metrics.sma200 !== null && metrics.sma50 > metrics.sma200;
+  const macdAboveSignal = metrics.macd !== null && metrics.macdSignal !== null && metrics.macd > metrics.macdSignal;
+  const rsiInRange = metrics.rsi14 !== null && metrics.rsi14 >= 45 && metrics.rsi14 <= 70;
+
+  let score = 0;
+  if (priceAboveSma200) score += 1;
+  if (sma50AboveSma200) score += 1;
+  if (macdAboveSignal) score += 1;
+  if (rsiInRange) score += 1;
+
+  const scoreBreakdown: TechnicalScoreBreakdown = {
+    priceAboveSma200,
+    sma50AboveSma200,
+    macdAboveSignal,
+    rsiInRange,
+  };
+
+  const smaComparisonLabel: 'Above' | 'Below' | 'Data unavailable' =
+    metrics.sma50 !== null && metrics.sma200 !== null
+      ? metrics.sma50 > metrics.sma200
+        ? 'Above'
+        : 'Below'
+      : 'Data unavailable';
+
+  const macdStatusLabel: 'Bullish' | 'Bearish' | 'Data unavailable' =
+    metrics.macd !== null && metrics.macdSignal !== null
+      ? metrics.macd > metrics.macdSignal
+        ? 'Bullish'
+        : 'Bearish'
+      : 'Data unavailable';
+
+  let technicalLabel: TechnicalRatingLabel = 'Caution';
+  if (score >= 3) {
+    technicalLabel = 'Constructive';
+  } else if (score === 2) {
+    technicalLabel = 'Mixed';
+  } else {
+    technicalLabel = 'Caution';
+  }
+
+  const eligibility: EligibilityStatus = score >= 2 ? 'Eligible' : 'Ineligible';
+
+  return {
+    ticker,
+    company,
+    category,
+    hasSufficientData: true,
+    validBarCount,
+    latestPrice: metrics.latestClose,
+    sma50: metrics.sma50,
+    sma200: metrics.sma200,
+    macd: metrics.macd,
+    macdSignal: metrics.macdSignal,
+    macdHistogram: metrics.macdHistogram,
+    rsi14: metrics.rsi14,
+    trailing60Return: metrics.trailing60Return,
+    annualizedVolatility: metrics.annualizedVolatility,
+    technicalScore: score,
+    scoreBreakdown,
+    smaComparisonLabel,
+    macdStatusLabel,
+    technicalLabel,
+    eligibility,
+  };
+}
+
+/**
+ * Screens all 20 configured portfolio universe stocks using the current in-memory symbol data map.
+ */
+export function screenAllCandidates(dataMap: SymbolDataMap): CandidateScreeningItem[] {
+  return PORTFOLIO_UNIVERSE.map((candidate) => {
+    const record = dataMap[candidate.ticker];
+    const data = record ? record.data : [];
+    return screenCandidate(candidate.ticker, candidate.company, candidate.category, data);
+  });
 }

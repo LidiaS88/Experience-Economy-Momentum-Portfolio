@@ -10,6 +10,7 @@ import { PortfolioDataStatus } from './components/PortfolioDataStatus';
 import { UniverseSummary } from './components/UniverseSummary';
 import { PortfolioOverview } from './components/PortfolioOverview';
 import { CandidateScreening } from './components/CandidateScreening';
+import { PortfolioReadiness } from './components/PortfolioReadiness';
 import { OptimizedPortfolio } from './components/OptimizedPortfolio';
 import { PortfolioAnalytics } from './components/PortfolioAnalytics';
 import { ExecutiveCommentary } from './components/ExecutiveCommentary';
@@ -102,10 +103,13 @@ export default function App() {
         <PortfolioOverview />
 
         {/* 3. Candidate Screening Section */}
-        <CandidateScreening />
+        <CandidateScreening dataMap={portfolioDataMap} />
+
+        {/* 3.5. Portfolio Analysis Readiness & Baseline Validation */}
+        <PortfolioReadiness dataMap={portfolioDataMap} />
 
         {/* 4. Optimized Portfolio Section */}
-        <OptimizedPortfolio />
+        <OptimizedPortfolio dataMap={portfolioDataMap} />
 
         {/* 5. Portfolio Analytics Section */}
         <PortfolioAnalytics />
