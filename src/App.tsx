@@ -77,14 +77,41 @@ export default function App() {
       await loadPortfolioHistoryBatch(
         apiKeys.twelveDataApiKey,
         portfolioDataMap,
-        (updatedMap, completed, total) => {
+        (updatedMap, completed, total, statusText) => {
           setPortfolioDataMap(updatedMap);
-          setProgressText(`Loaded ${completed} of ${total} symbols.`);
+          setProgressText(statusText || `Loaded ${completed} of ${total} symbols.`);
         },
         3
       );
     } catch (err: any) {
       console.error('Error during batch load:', err);
+    } finally {
+      setIsLoadingPortfolioData(false);
+    }
+  };
+
+  // 1.1 Retry only failed or insufficient-data requests without re-fetching cached successes
+  const handleRetryFailedData = async () => {
+    if (!apiKeys.twelveDataApiKey.trim() || isLoadingPortfolioData) {
+      return;
+    }
+
+    setIsLoadingPortfolioData(true);
+    setProgressText('Retrying failed / insufficient symbols...');
+
+    try {
+      await loadPortfolioHistoryBatch(
+        apiKeys.twelveDataApiKey,
+        portfolioDataMap,
+        (updatedMap, completed, total, statusText) => {
+          setPortfolioDataMap(updatedMap);
+          setProgressText(statusText || `Loaded ${completed} of ${total} symbols.`);
+        },
+        3,
+        true
+      );
+    } catch (err: any) {
+      console.error('Error during retry load:', err);
     } finally {
       setIsLoadingPortfolioData(false);
     }
@@ -162,6 +189,7 @@ export default function App() {
           progressText={progressText}
           hasTwelveDataKey={hasTwelveDataKey}
           onLoadData={handleLoadPortfolioData}
+          onRetryFailedData={handleRetryFailedData}
         />
 
         {/* 2. Portfolio Overview Section with KPI Cards & Refresh Latest Prices Action */}

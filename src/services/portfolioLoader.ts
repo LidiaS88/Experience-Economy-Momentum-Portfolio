@@ -1,4 +1,4 @@
-import { StockCandidate, BenchmarkConfig, SymbolDataRecord, SymbolDataMap, FetchStatus, LatestQuotesMap, LatestQuoteResult } from '../types';
+import { StockCandidate, BenchmarkConfig, SymbolDataRecord, SymbolDataMap, FetchStatus, LatestQuotesMap, LatestQuoteResult, QuoteRefreshSummary } from '../types';
 import { PORTFOLIO_UNIVERSE, BENCHMARK } from '../config';
 import { fetchDailyHistory, fetchLatestQuote } from './twelveData';
 
@@ -50,12 +50,14 @@ export function createInitialSymbolDataMap(): SymbolDataMap {
  * @param currentData - Current in-memory symbol data map
  * @param onProgress - Callback triggered when symbol statuses change or items complete
  * @param concurrencyLimit - Maximum concurrent fetch requests (default: 3)
+ * @param onlyFailedOrInsufficient - If true, only queues failed, insufficient, or pending symbols (leaves successes untouched)
  */
 export async function loadPortfolioHistoryBatch(
   apiKey: string,
   currentData: SymbolDataMap,
-  onProgress: (updatedMap: SymbolDataMap, completedCount: number, totalCount: number) => void,
-  concurrencyLimit = 3
+  onProgress: (updatedMap: SymbolDataMap, completedCount: number, totalCount: number, statusText?: string) => void,
+  concurrencyLimit = 3,
+  onlyFailedOrInsufficient = false
 ): Promise<SymbolDataMap> {
   // Working clone of current state
   const resultMap: SymbolDataMap = { ...currentData };
@@ -75,7 +77,7 @@ export async function loadPortfolioHistoryBatch(
   for (const sym of allSymbols) {
     const existing = resultMap[sym.ticker];
     if (existing && existing.status === 'success' && existing.data.length >= MIN_REQUIRED_DAILY_BARS) {
-      // Already cached successfully in JS runtime
+      // Already cached successfully in JS runtime - do not re-fetch
       completedCount++;
     } else {
       queue.push(sym);
@@ -91,12 +93,13 @@ export async function loadPortfolioHistoryBatch(
           data: [],
         }),
         status: 'pending',
+        errorMessage: undefined,
       };
     }
   }
 
   // Initial progress update
-  onProgress({ ...resultMap }, completedCount, totalCount);
+  onProgress({ ...resultMap }, completedCount, totalCount, `Queued ${queue.length} symbols for retrieval...`);
 
   if (queue.length === 0) {
     return resultMap;
@@ -114,11 +117,14 @@ export async function loadPortfolioHistoryBatch(
       resultMap[item.ticker] = {
         ...resultMap[item.ticker],
         status: 'loading',
+        errorMessage: undefined,
       };
-      onProgress({ ...resultMap }, completedCount, totalCount);
+      onProgress({ ...resultMap }, completedCount, totalCount, `Fetching ${item.ticker}...`);
 
       try {
-        const fetchResult = await fetchDailyHistory(item.ticker, apiKey);
+        const fetchResult = await fetchDailyHistory(item.ticker, apiKey, (retryMsg) => {
+          onProgress({ ...resultMap }, completedCount, totalCount, retryMsg);
+        });
 
         if (fetchResult.status === 'ok' && fetchResult.data.length > 0) {
           const bars = fetchResult.data;
@@ -209,18 +215,27 @@ export async function refreshLatestPricesBatch(
   tickers: string[],
   apiKey: string,
   onProgress: (quotesMap: LatestQuotesMap, completed: number, total: number) => void,
-  concurrencyLimit = 3
-): Promise<LatestQuotesMap> {
+  concurrencyLimit纯 = 3
+): Promise<QuoteRefreshSummary> {
   const quotesMap: LatestQuotesMap = {};
   const cleanTickers = Array.from(new Set(tickers.map((t) => (t || '').trim().toUpperCase()))).filter(Boolean);
   const total = cleanTickers.length;
 
   if (total === 0) {
-    return quotesMap;
+    return {
+      lastRefreshedAt: new Date().toISOString(),
+      totalAttempted: 0,
+      successCount: 0,
+      failureCount: 0,
+      errors: [],
+    };
   }
 
   let queueIndex = 0;
   let completed = 0;
+  let successCount = 0;
+  let failureCount = 0;
+  const errors: { symbol: string; error: string }[] = [];
 
   const runQuoteWorker = async () => {
     while (queueIndex < cleanTickers.length) {
@@ -230,7 +245,16 @@ export async function refreshLatestPricesBatch(
       try {
         const quote = await fetchLatestQuote(ticker, apiKey);
         quotesMap[ticker] = quote;
+        if (quote.status === 'ok') {
+          successCount++;
+        } else {
+          failureCount++;
+          errors.push({ symbol: ticker, error: quote.errorMessage || 'Quote failed' });
+        }
       } catch (err: any) {
+        failureCount++;
+        const errDetail = err?.message || 'Failed to fetch quote.';
+        errors.push({ symbol: ticker, error: errDetail });
         quotesMap[ticker] = {
           symbol: ticker,
           price: null,
@@ -242,7 +266,7 @@ export async function refreshLatestPricesBatch(
           isMarketOpen: null,
           fetchedAt: new Date().toISOString(),
           status: 'error',
-          errorMessage: err?.message || 'Failed to fetch quote.',
+          errorMessage: errDetail,
           priceLabel: 'Data unavailable',
         };
       }
@@ -252,7 +276,7 @@ export async function refreshLatestPricesBatch(
     }
   };
 
-  const poolSize = Math.min(concurrencyLimit, cleanTickers.length);
+  const poolSize = Math.min(concurrencyLimit纯, cleanTickers.length);
   const workers: Promise<void>[] = [];
 
   for (let i = 0; i < poolSize; i++) {
@@ -260,5 +284,12 @@ export async function refreshLatestPricesBatch(
   }
 
   await Promise.all(workers);
-  return quotesMap;
+
+  return {
+    lastRefreshedAt: new Date().toISOString(),
+    totalAttempted: total,
+    successCount,
+    failureCount,
+    errors,
+  };
 }

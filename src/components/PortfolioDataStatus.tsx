@@ -25,6 +25,7 @@ interface PortfolioDataStatusProps {
   progressText: string;
   hasTwelveDataKey: boolean;
   onLoadData: () => void;
+  onRetryFailedData?: () => void;
   onForceReloadAll?: () => void;
 }
 
@@ -34,6 +35,7 @@ export const PortfolioDataStatus: React.FC<PortfolioDataStatusProps> = ({
   progressText,
   hasTwelveDataKey,
   onLoadData,
+  onRetryFailedData,
   onForceReloadAll,
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -47,6 +49,7 @@ export const PortfolioDataStatus: React.FC<PortfolioDataStatusProps> = ({
   const insufficientCount = records.filter((r) => r.status === 'insufficient-data').length;
   const failedCount = records.filter((r) => r.status === 'failed').length;
   const pendingCount = records.filter((r) => r.status === 'pending').length;
+  const retryableCount = failedCount + insufficientCount;
 
   const categories = Array.from(new Set(records.map((r) => r.category)));
 
@@ -130,7 +133,7 @@ export const PortfolioDataStatus: React.FC<PortfolioDataStatusProps> = ({
           </div>
         </div>
 
-        {/* Action Button & Live Progress */}
+        {/* Action Buttons & Live Progress */}
         <div className="flex flex-col sm:flex-row sm:items-center gap-3">
           {progressText && (
             <div
@@ -140,6 +143,21 @@ export const PortfolioDataStatus: React.FC<PortfolioDataStatusProps> = ({
               {isLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin text-blue-600" /> : <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />}
               <span>{progressText}</span>
             </div>
+          )}
+
+          {/* Retry failed data requests button - only active when failed or insufficient symbols exist */}
+          {onRetryFailedData && retryableCount > 0 && (
+            <button
+              id="retry-failed-data-requests-button"
+              type="button"
+              onClick={onRetryFailedData}
+              disabled={isLoading || !hasTwelveDataKey}
+              className="inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs sm:text-sm font-semibold text-amber-800 bg-amber-100 hover:bg-amber-200 active:bg-amber-300 border border-amber-300 rounded-lg transition-colors cursor-pointer shadow-xs disabled:opacity-50 disabled:cursor-not-allowed"
+              title={`Retry only the ${retryableCount} failed or insufficient-data symbols without re-fetching already successful data`}
+            >
+              <RotateCcw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin' : ''}`} />
+              <span>Retry failed data requests ({retryableCount})</span>
+            </button>
           )}
 
           <button
