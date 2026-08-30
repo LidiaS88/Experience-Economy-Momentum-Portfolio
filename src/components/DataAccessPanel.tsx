@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { SessionApiKeys, HistoryResult } from '../types';
 import { fetchDailyHistory } from '../services/twelveData';
+import { TechnicalIndicatorTest } from './TechnicalIndicatorTest';
 
 interface DataAccessPanelProps {
   apiKeys: SessionApiKeys;
@@ -244,6 +245,7 @@ export const DataAccessPanel: React.FC<DataAccessPanelProps> = ({
             </div>
 
             {testResult.status === 'ok' ? (
+              <>
               <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
                 {/* Metric 1: Valid Bars */}
                 <div className="p-2.5 bg-white/80 rounded border border-emerald-200">
@@ -301,6 +303,10 @@ export const DataAccessPanel: React.FC<DataAccessPanelProps> = ({
                   </div>
                 </div>
               </div>
+
+              {/* Technical Indicator Test & Verification Section */}
+              <TechnicalIndicatorTest symbol={testResult.symbol} data={testResult.data} />
+              </>
             ) : (
               <div className="p-3 bg-white/80 rounded border border-rose-200">
                 <div className="flex items-start gap-2">

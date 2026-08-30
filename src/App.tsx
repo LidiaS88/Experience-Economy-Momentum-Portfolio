@@ -6,6 +6,7 @@
 import React, { useState } from 'react';
 import { Header } from './components/Header';
 import { DataAccessPanel } from './components/DataAccessPanel';
+import { PortfolioDataStatus } from './components/PortfolioDataStatus';
 import { UniverseSummary } from './components/UniverseSummary';
 import { PortfolioOverview } from './components/PortfolioOverview';
 import { CandidateScreening } from './components/CandidateScreening';
@@ -13,7 +14,8 @@ import { OptimizedPortfolio } from './components/OptimizedPortfolio';
 import { PortfolioAnalytics } from './components/PortfolioAnalytics';
 import { ExecutiveCommentary } from './components/ExecutiveCommentary';
 import { MethodologySection } from './components/MethodologySection';
-import { SessionApiKeys } from './types';
+import { SessionApiKeys, SymbolDataMap } from './types';
+import { createInitialSymbolDataMap, loadPortfolioHistoryBatch } from './services/portfolioLoader';
 
 export default function App() {
   // Pure in-memory React state for session API keys (never saved to storage/cookies)
@@ -22,6 +24,11 @@ export default function App() {
     openRouterApiKey: '',
     openRouterModel: '',
   });
+
+  // Pure in-memory React state for portfolio historical market data cache
+  const [portfolioDataMap, setPortfolioDataMap] = useState<SymbolDataMap>(createInitialSymbolDataMap);
+  const [isLoadingPortfolioData, setIsLoadingPortfolioData] = useState(false);
+  const [progressText, setProgressText] = useState('');
 
   const handleUpdateKeys = (updated: Partial<SessionApiKeys>) => {
     setApiKeys((prev) => ({
@@ -37,6 +44,33 @@ export default function App() {
       openRouterModel: '',
     });
   };
+
+  const handleLoadPortfolioData = async () => {
+    if (!apiKeys.twelveDataApiKey.trim() || isLoadingPortfolioData) {
+      return;
+    }
+
+    setIsLoadingPortfolioData(true);
+    setProgressText('Initiating concurrent streams (max 3)...');
+
+    try {
+      await loadPortfolioHistoryBatch(
+        apiKeys.twelveDataApiKey,
+        portfolioDataMap,
+        (updatedMap, completed, total) => {
+          setPortfolioDataMap(updatedMap);
+          setProgressText(`Loaded ${completed} of ${total} symbols.`);
+        },
+        3
+      );
+    } catch (err: any) {
+      console.error('Error during batch load:', err);
+    } finally {
+      setIsLoadingPortfolioData(false);
+    }
+  };
+
+  const hasTwelveDataKey = Boolean(apiKeys.twelveDataApiKey.trim());
 
   return (
     <div id="portfolio-app-root" className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans">
@@ -54,6 +88,15 @@ export default function App() {
 
         {/* Read-Only Universe Summary (20 stocks, 5 categories, benchmark SPY) */}
         <UniverseSummary />
+
+        {/* Portfolio Historical Data Loader & Status Table */}
+        <PortfolioDataStatus
+          dataMap={portfolioDataMap}
+          isLoading={isLoadingPortfolioData}
+          progressText={progressText}
+          hasTwelveDataKey={hasTwelveDataKey}
+          onLoadData={handleLoadPortfolioData}
+        />
 
         {/* 2. Portfolio Overview Section */}
         <PortfolioOverview />
