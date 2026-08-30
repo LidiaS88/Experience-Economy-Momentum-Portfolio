@@ -1,4 +1,4 @@
-import { PriceBar, HistoryResult } from '../types';
+import { PriceBar, HistoryResult, LatestQuoteResult } from '../types';
 
 /**
  * Fetches daily price history for a given symbol from the Twelve Data time_series endpoint.
@@ -198,6 +198,210 @@ export async function fetchDailyHistory(
       data: [],
       message: userMsg,
       fetchedAt,
+    };
+  }
+}
+
+/**
+ * Fetches the latest available quote/price for a symbol using Twelve Data quote/price endpoint.
+ * Accurately reports whether the market is open or closed, previous close, price change,
+ * timestamp, and explicit price label.
+ *
+ * @param symbol Ticker symbol (e.g. "DAL")
+ * @param apiKey Twelve Data API key
+ */
+export async function fetchLatestQuote(
+  symbol: string,
+  apiKey: string
+): Promise<LatestQuoteResult> {
+  const fetchedAt = new Date().toISOString();
+  const trimmedKey = (apiKey || '').trim();
+  const cleanSymbol = (symbol || '').trim().toUpperCase();
+
+  if (!trimmedKey) {
+    return {
+      symbol: cleanSymbol || symbol,
+      price: null,
+      previousClose: null,
+      change: null,
+      percentChange: null,
+      datetime: null,
+      timestamp: null,
+      isMarketOpen: null,
+      fetchedAt: new Date().toISOString(),
+      status: 'error',
+      errorMessage: 'Twelve Data API key is missing. Please provide your key in the Data Access Panel.',
+      priceLabel: 'Data unavailable',
+    };
+  }
+
+  if (!cleanSymbol) {
+    return {
+      symbol: '',
+      price: null,
+      previousClose: null,
+      change: null,
+      percentChange: null,
+      datetime: null,
+      timestamp: null,
+      isMarketOpen: null,
+      fetchedAt: new Date().toISOString(),
+      status: 'error',
+      errorMessage: 'A valid ticker symbol is required.',
+      priceLabel: 'Data unavailable',
+    };
+  }
+
+  const quoteEndpoint = `https://api.twelvedata.com/quote?symbol=${encodeURIComponent(
+    cleanSymbol
+  )}&apikey=${encodeURIComponent(trimmedKey)}`;
+
+  try {
+    const response = await fetch(quoteEndpoint, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      let httpErrorMsg = `HTTP Error ${response.status}: ${response.statusText}`;
+      try {
+        const errorJson = await response.json();
+        if (errorJson && errorJson.message) {
+          httpErrorMsg = errorJson.message;
+        }
+      } catch {
+        // use default HTTP error
+      }
+
+      if (response.status === 401 || response.status === 403) {
+        httpErrorMsg = 'Invalid API key or unauthorized access.';
+      } else if (response.status === 429) {
+        httpErrorMsg = 'Twelve Data API rate limit exceeded (Free tier: 8 requests/min).';
+      }
+
+      return {
+        symbol: cleanSymbol,
+        price: null,
+        previousClose: null,
+        change: null,
+        percentChange: null,
+        datetime: null,
+        timestamp: null,
+        isMarketOpen: null,
+        fetchedAt: new Date().toISOString(),
+        status: 'error',
+        errorMessage: httpErrorMsg,
+        priceLabel: 'Data unavailable',
+      };
+    }
+
+    let parsed: any;
+    try {
+      parsed = await response.json();
+    } catch {
+      return {
+        symbol: cleanSymbol,
+        price: null,
+        previousClose: null,
+        change: null,
+        percentChange: null,
+        datetime: null,
+        timestamp: null,
+        isMarketOpen: null,
+        fetchedAt: new Date().toISOString(),
+        status: 'error',
+        errorMessage: 'Failed to parse JSON response from Twelve Data Quote API.',
+        priceLabel: 'Data unavailable',
+      };
+    }
+
+    // Check for API-level error returned in JSON payload
+    if (parsed && (parsed.status === 'error' || parsed.code >= 400 || (parsed.message && !parsed.close && !parsed.price))) {
+      let errText = parsed.message || 'Quote request error returned by Twelve Data.';
+      if (parsed.code === 429 || errText.toLowerCase().includes('limit')) {
+        errText = 'Rate limit exceeded for Twelve Data API (Free tier: 8 requests/min).';
+      }
+
+      return {
+        symbol: cleanSymbol,
+        price: null,
+        previousClose: null,
+        change: null,
+        percentChange: null,
+        datetime: null,
+        timestamp: null,
+        isMarketOpen: null,
+        fetchedAt: new Date().toISOString(),
+        status: 'error',
+        errorMessage: errText,
+        priceLabel: 'Data unavailable',
+      };
+    }
+
+    // Extract quote values safely
+    const rawPrice = parsed.close !== undefined ? parsed.close : parsed.price;
+    const priceNum = rawPrice !== undefined && rawPrice !== null ? Number(rawPrice) : NaN;
+
+    if (isNaN(priceNum) || priceNum <= 0) {
+      return {
+        symbol: cleanSymbol,
+        price: null,
+        previousClose: null,
+        change: null,
+        percentChange: null,
+        datetime: null,
+        timestamp: null,
+        isMarketOpen: null,
+        fetchedAt: new Date().toISOString(),
+        status: 'error',
+        errorMessage: `Invalid price quote returned for ${cleanSymbol}.`,
+        priceLabel: 'Data unavailable',
+      };
+    }
+
+    const prevCloseNum = parsed.previous_close !== undefined ? Number(parsed.previous_close) : null;
+    const changeNum = parsed.change !== undefined ? Number(parsed.change) : null;
+    const percentChangeNum = parsed.percent_change !== undefined ? Number(parsed.percent_change) : null;
+    const datetimeStr = typeof parsed.datetime === 'string' ? parsed.datetime : null;
+    const timestampNum = typeof parsed.timestamp === 'number' ? parsed.timestamp : null;
+    const isMarketOpen = typeof parsed.is_market_open === 'boolean' ? parsed.is_market_open : null;
+
+    // Respect constraint:
+    // If the market is closed, label the result "Latest available price"; do not claim it is live real-time data.
+    // Only if is_market_open is explicitly true and recent, label as "Live market price"
+    const priceLabel: 'Live market price' | 'Latest available price' | 'Data unavailable' =
+      isMarketOpen === true ? 'Live market price' : 'Latest available price';
+
+    return {
+      symbol: cleanSymbol,
+      price: priceNum,
+      previousClose: prevCloseNum !== null && !isNaN(prevCloseNum) ? prevCloseNum : null,
+      change: changeNum !== null && !isNaN(changeNum) ? changeNum : null,
+      percentChange: percentChangeNum !== null && !isNaN(percentChangeNum) ? percentChangeNum : null,
+      datetime: datetimeStr,
+      timestamp: timestampNum,
+      isMarketOpen,
+      fetchedAt: new Date().toISOString(),
+      status: 'ok',
+      priceLabel,
+    };
+  } catch (err: any) {
+    const errorString = err instanceof Error ? err.message : String(err);
+    return {
+      symbol: cleanSymbol,
+      price: null,
+      previousClose: null,
+      change: null,
+      percentChange: null,
+      datetime: null,
+      timestamp: null,
+      isMarketOpen: null,
+      fetchedAt: new Date().toISOString(),
+      status: 'error',
+      errorMessage: `Network error while fetching quote: ${errorString}`,
+      priceLabel: 'Data unavailable',
     };
   }
 }

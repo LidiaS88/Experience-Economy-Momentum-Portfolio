@@ -1,6 +1,6 @@
-import { StockCandidate, BenchmarkConfig, SymbolDataRecord, SymbolDataMap, FetchStatus } from '../types';
+import { StockCandidate, BenchmarkConfig, SymbolDataRecord, SymbolDataMap, FetchStatus, LatestQuotesMap, LatestQuoteResult } from '../types';
 import { PORTFOLIO_UNIVERSE, BENCHMARK } from '../config';
-import { fetchDailyHistory } from './twelveData';
+import { fetchDailyHistory, fetchLatestQuote } from './twelveData';
 
 /**
  * Minimum valid daily rows required for a symbol to be marked as 'success'.
@@ -192,4 +192,73 @@ export async function loadPortfolioHistoryBatch(
 
   await Promise.all(activeWorkers);
   return resultMap;
+}
+
+/**
+ * Refreshes latest available price quotes for specified tickers using Twelve Data Quote API.
+ * - Concurrency limit of 3.
+ * - Non-blocking: failure of one quote does not stop remaining requests.
+ * - Does not re-fetch historical time series.
+ *
+ * @param tickers Array of tickers to refresh
+ * @param apiKey Twelve Data API Key
+ * @param onProgress Callback invoked on each quote completion
+ * @param concurrencyLimit Maximum concurrency (default: 3)
+ */
+export async function refreshLatestPricesBatch(
+  tickers: string[],
+  apiKey: string,
+  onProgress: (quotesMap: LatestQuotesMap, completed: number, total: number) => void,
+  concurrencyLimit = 3
+): Promise<LatestQuotesMap> {
+  const quotesMap: LatestQuotesMap = {};
+  const cleanTickers = Array.from(new Set(tickers.map((t) => (t || '').trim().toUpperCase()))).filter(Boolean);
+  const total = cleanTickers.length;
+
+  if (total === 0) {
+    return quotesMap;
+  }
+
+  let queueIndex = 0;
+  let completed = 0;
+
+  const runQuoteWorker = async () => {
+    while (queueIndex < cleanTickers.length) {
+      const currentIndex = queueIndex++;
+      const ticker = cleanTickers[currentIndex];
+
+      try {
+        const quote = await fetchLatestQuote(ticker, apiKey);
+        quotesMap[ticker] = quote;
+      } catch (err: any) {
+        quotesMap[ticker] = {
+          symbol: ticker,
+          price: null,
+          previousClose: null,
+          change: null,
+          percentChange: null,
+          datetime: null,
+          timestamp: null,
+          isMarketOpen: null,
+          fetchedAt: new Date().toISOString(),
+          status: 'error',
+          errorMessage: err?.message || 'Failed to fetch quote.',
+          priceLabel: 'Data unavailable',
+        };
+      }
+
+      completed++;
+      onProgress({ ...quotesMap }, completed, total);
+    }
+  };
+
+  const poolSize = Math.min(concurrencyLimit, cleanTickers.length);
+  const workers: Promise<void>[] = [];
+
+  for (let i = 0; i < poolSize; i++) {
+    workers.push(runQuoteWorker());
+  }
+
+  await Promise.all(workers);
+  return quotesMap;
 }

@@ -195,6 +195,41 @@ export interface OptimizerValidation {
   validationErrors: string[];
 }
 
+export interface LatestQuoteResult {
+  symbol: string;
+  price: number | null;
+  previousClose: number | null;
+  change: number | null;
+  percentChange: number | null;
+  datetime: string | null;
+  timestamp: number | null;
+  isMarketOpen: boolean | null;
+  fetchedAt: string;
+  status: 'ok' | 'error';
+  errorMessage?: string;
+  priceLabel: 'Live market price' | 'Latest available price' | 'Data unavailable';
+}
+
+export type LatestQuotesMap = Record<string, LatestQuoteResult>;
+
+export interface QuoteRefreshSummary {
+  lastRefreshedAt: string | null;
+  totalAttempted: number;
+  successCount: number;
+  failureCount: number;
+  errors: { symbol: string; error: string }[];
+}
+
+export interface CumulativePerformancePoint {
+  date: string;
+  minVarIndex: number;
+  equalWeightIndex: number;
+  spyIndex: number | null;
+  minVarReturn?: number;
+  equalWeightReturn?: number;
+  spyReturn?: number | null;
+}
+
 export interface OptimizationResult {
   status: 'Optimal' | 'Validation Fallback' | 'Insufficient Holdings' | 'No Data';
   statusMessage: string;
@@ -208,9 +243,17 @@ export interface OptimizationResult {
   equalWeightVolatility: number | null;
   volatilityDelta: number | null;
   relativeRiskReduction: number | null;
+  minVarPerformance: PortfolioPerformanceMetrics | null;
+  equalWeightPerformance: PortfolioPerformanceMetrics | null;
+  benchmarkPerformance: PortfolioPerformanceMetrics | null;
+  cumulativeSeries: CumulativePerformancePoint[];
+  correlationMatrix: CorrelationMatrixResult | null;
   validation: OptimizerValidation;
   totalCapital: number;
   tickers: string[];
   isFallbackActive: boolean;
+  historyStartDate: string | null;
+  historyEndDate: string | null;
+  commonDateCount: number;
 }
 

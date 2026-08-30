@@ -6,8 +6,18 @@ import {
   OptimizationResult,
   InclusionReason,
   OptimizerSignalStatus,
+  CumulativePerformancePoint,
 } from '../types';
-import { calculateDailyReturns, alignReturnSeries, calculateCovarianceMatrix } from './portfolioMath';
+import {
+  calculateDailyReturns,
+  alignReturnSeries,
+  calculateCovarianceMatrix,
+  calculateCorrelationMatrix,
+  calculateEqualWeightPortfolioReturns,
+  calculatePortfolioPerformance,
+  alignBenchmarkReturns,
+} from './portfolioMath';
+import { BENCHMARK } from '../config';
 
 export const TOTAL_PORTFOLIO_CAPITAL = 1_000_000;
 export const MAX_WEIGHT_CONSTRAINT = 0.20; // 20% maximum individual asset cap
@@ -406,10 +416,18 @@ export function runPortfolioOptimizer(
       equalWeightVolatility: null,
       volatilityDelta: null,
       relativeRiskReduction: null,
+      minVarPerformance: null,
+      equalWeightPerformance: null,
+      benchmarkPerformance: null,
+      cumulativeSeries: [],
+      correlationMatrix: null,
       validation: emptyValidation,
       totalCapital: TOTAL_PORTFOLIO_CAPITAL,
       tickers: [],
       isFallbackActive: false,
+      historyStartDate: null,
+      historyEndDate: null,
+      commonDateCount: 0,
     };
   }
 
@@ -518,15 +536,24 @@ export function runPortfolioOptimizer(
       equalWeightVolatility: null,
       volatilityDelta: null,
       relativeRiskReduction: null,
+      minVarPerformance: null,
+      equalWeightPerformance: null,
+      benchmarkPerformance: null,
+      cumulativeSeries: [],
+      correlationMatrix: null,
       validation: emptyValidation,
       totalCapital: TOTAL_PORTFOLIO_CAPITAL,
       tickers: includedTickers,
       isFallbackActive,
+      historyStartDate: null,
+      historyEndDate: null,
+      commonDateCount: alignedReturns.dateCount,
     };
   }
 
   const covResult = calculateCovarianceMatrix(alignedReturns);
   const sigmaAnn = covResult.annualizedCovariance;
+  const correlationMatrix = calculateCorrelationMatrix(alignedReturns);
 
   // 4. Run Numerical Optimizer (Projected Gradient Descent)
   const optimization = solveMinimumVariancePGD(
@@ -566,6 +593,73 @@ export function runPortfolioOptimizer(
     equalWeightVolatility > 0
       ? ((equalWeightVolatility - minVarianceVolatility) / equalWeightVolatility) * 100
       : 0;
+
+  // 6b. Compute Min-Var & Equal-Weight Daily Return Time Series
+  const minVarDailyReturns: { date: string; value: number }[] = [];
+  const ewDailyReturns: { date: string; value: number }[] = [];
+
+  for (let t = 0; t < alignedReturns.dateCount; t++) {
+    const date = alignedReturns.dates[t];
+    let minVarSum = 0;
+    let ewSum = 0;
+
+    for (let i = 0; i < includedCount; i++) {
+      const ret = alignedReturns.matrix[t][i];
+      minVarSum += finalWeights[i] * ret;
+      ewSum += ewWeights[i] * ret;
+    }
+
+    minVarDailyReturns.push({ date, value: minVarSum });
+    ewDailyReturns.push({ date, value: ewSum });
+  }
+
+  // 6c. Align Benchmark (SPY) Returns to Common Evaluation Dates
+  const benchmarkRecord = dataMap[BENCHMARK.ticker];
+  let benchmarkDailyReturns: { date: string; value: number }[] = [];
+  if (benchmarkRecord && benchmarkRecord.data && benchmarkRecord.data.length >= 2) {
+    benchmarkDailyReturns = alignBenchmarkReturns(benchmarkRecord.data, alignedReturns.dates);
+  }
+
+  const benchmarkReturnsMap = new Map<string, number>();
+  for (const b of benchmarkDailyReturns) {
+    benchmarkReturnsMap.set(b.date, b.value);
+  }
+
+  // 6d. Calculate Cumulative Indexed Curves (Base Value = 100.00)
+  const cumulativeSeries: CumulativePerformancePoint[] = [];
+  let minVarIndex = 100.0;
+  let ewIndex = 100.0;
+  let spyIndex = benchmarkDailyReturns.length > 0 ? 100.0 : null;
+
+  for (let t = 0; t < alignedReturns.dateCount; t++) {
+    const date = alignedReturns.dates[t];
+    const rMinVar = minVarDailyReturns[t].value;
+    const rEW = ewDailyReturns[t].value;
+    const rSPY = benchmarkReturnsMap.get(date) ?? null;
+
+    minVarIndex *= (1.0 + rMinVar);
+    ewIndex *= (1.0 + rEW);
+    if (spyIndex !== null && rSPY !== null) {
+      spyIndex *= (1.0 + rSPY);
+    }
+
+    cumulativeSeries.push({
+      date,
+      minVarIndex: Number(minVarIndex.toFixed(2)),
+      equalWeightIndex: Number(ewIndex.toFixed(2)),
+      spyIndex: spyIndex !== null ? Number(spyIndex.toFixed(2)) : null,
+      minVarReturn: rMinVar,
+      equalWeightReturn: rEW,
+      spyReturn: rSPY,
+    });
+  }
+
+  // 6e. Full Performance Metrics
+  const minVarPerformance = calculatePortfolioPerformance(minVarDailyReturns, 0.0);
+  const equalWeightPerformance = calculatePortfolioPerformance(ewDailyReturns, 0.0);
+  const benchmarkPerformance = benchmarkDailyReturns.length > 0
+    ? calculatePortfolioPerformance(benchmarkDailyReturns, 0.0)
+    : null;
 
   // 7. Assemble Holdings Table Data ($1,000,000 capital model)
   const holdings: OptimizedHolding[] = selectedWithTags.map((entry, idx) => {
@@ -614,9 +708,17 @@ export function runPortfolioOptimizer(
     equalWeightVolatility,
     volatilityDelta,
     relativeRiskReduction,
+    minVarPerformance,
+    equalWeightPerformance,
+    benchmarkPerformance,
+    cumulativeSeries,
+    correlationMatrix,
     validation,
     totalCapital: TOTAL_PORTFOLIO_CAPITAL,
     tickers: includedTickers,
     isFallbackActive,
+    historyStartDate: alignedReturns.startDate,
+    historyEndDate: alignedReturns.endDate,
+    commonDateCount: alignedReturns.dateCount,
   };
 }
