@@ -215,7 +215,7 @@ export async function refreshLatestPricesBatch(
   tickers: string[],
   apiKey: string,
   onProgress: (quotesMap: LatestQuotesMap, completed: number, total: number) => void,
-  concurrencyLimit纯 = 3
+  concurrencyLimit = 3
 ): Promise<QuoteRefreshSummary> {
   const quotesMap: LatestQuotesMap = {};
   const cleanTickers = Array.from(new Set(tickers.map((t) => (t || '').trim().toUpperCase()))).filter(Boolean);
@@ -276,7 +276,7 @@ export async function refreshLatestPricesBatch(
     }
   };
 
-  const poolSize = Math.min(concurrencyLimit纯, cleanTickers.length);
+  const poolSize = Math.min(concurrencyLimit, cleanTickers.length);
   const workers: Promise<void>[] = [];
 
   for (let i = 0; i < poolSize; i++) {

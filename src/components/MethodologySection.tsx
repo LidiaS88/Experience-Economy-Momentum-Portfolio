@@ -48,16 +48,17 @@ export const MethodologySection: React.FC = () => {
               <h3>2. Technical Rules &amp; Momentum Filter</h3>
             </div>
             <p className="text-xs text-slate-600 leading-relaxed">
-              Equities are evaluated against seven quantitative eligibility and technical screening rules:
+              Equities are evaluated against eight quantitative technical rules and eligibility criteria:
             </p>
             <ul className="text-xs text-slate-600 mt-2 space-y-1 list-disc list-inside">
-              <li><strong className="text-slate-700">Data Sufficiency:</strong> At least 252 valid daily price bars are required for indicator computation and covariance estimation.</li>
-              <li><strong className="text-slate-700">Rule 1 (Price Trend):</strong> Latest close &gt; 200-day SMA.</li>
-              <li><strong className="text-slate-700">Rule 2 (Moving Average Cross):</strong> 50-day SMA &gt; 200-day SMA.</li>
-              <li><strong className="text-slate-700">Rule 3 (Momentum):</strong> MACD(12, 26, 9) line &gt; MACD signal line.</li>
-              <li><strong className="text-slate-700">Rule 4 (Oscillator Band):</strong> RSI-14 is between 45 and 70 inclusive.</li>
-              <li><strong className="text-slate-700">Technical Score:</strong> One point awarded per satisfied rule, producing an integer score from 0 to 4.</li>
-              <li><strong className="text-slate-700">Eligibility &amp; Fallback:</strong> A stock is Eligible when it has &ge; 252 daily bars and a technical score &ge; 2. If fewer than 10 holdings are eligible, the optimizer transparently includes the highest-scoring data-sufficient fallback candidates and labels them as fallback holdings.</li>
+              <li><strong className="text-slate-700">1. Data Sufficiency:</strong> At least 252 valid daily price bars are required.</li>
+              <li><strong className="text-slate-700">2. Trend Verification:</strong> Latest close must be above the 200-day SMA.</li>
+              <li><strong className="text-slate-700">3. Moving Average Alignment:</strong> 50-day SMA must be above the 200-day SMA.</li>
+              <li><strong className="text-slate-700">4. MACD Momentum:</strong> MACD(12, 26, 9) must be above its signal line.</li>
+              <li><strong className="text-slate-700">5. RSI Range:</strong> RSI(14) must be between 45 and 70 inclusive.</li>
+              <li><strong className="text-slate-700">6. Technical Score:</strong> Each passed rule earns one point, for a technical score from 0 to 4.</li>
+              <li><strong className="text-slate-700">7. Eligibility Gate:</strong> A holding is &ldquo;Eligible&rdquo; when it has sufficient data and technical score &ge; 2.</li>
+              <li><strong className="text-slate-700">8. Fallback Inclusion:</strong> If fewer than 10 holdings are eligible, the optimizer adds the highest-scoring data-sufficient candidates as clearly labeled &ldquo;Fallback included&rdquo; holdings.</li>
             </ul>
           </div>
 
