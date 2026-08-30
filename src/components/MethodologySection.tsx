@@ -48,13 +48,17 @@ export const MethodologySection: React.FC = () => {
               <h3>2. Technical Rules &amp; Momentum Filter</h3>
             </div>
             <p className="text-xs text-slate-600 leading-relaxed">
-              Equities must satisfy rigorous quantitative eligibility gates:
+              Equities require at least <strong className="text-slate-800">252 valid daily price bars</strong> and are evaluated against 4 technical rules (1 point each, technical score from 0 to 4):
             </p>
             <ul className="text-xs text-slate-600 mt-2 space-y-1 list-disc list-inside">
-              <li><strong className="text-slate-700">Trend Verification:</strong> Price must trade strictly above its 200-day Simple Moving Average (SMA).</li>
-              <li><strong className="text-slate-700">Composite Momentum:</strong> Equal-weighted rank of 3-month, 6-month, and 12-month relative price strength.</li>
-              <li><strong className="text-slate-700">Liquidity Filter:</strong> Minimum market capitalization of $2.0B USD with 30-day average daily volume exceeding $20M.</li>
+              <li><strong className="text-slate-700">Rule 1:</strong> Latest close above 200-day SMA.</li>
+              <li><strong className="text-slate-700">Rule 2:</strong> 50-day SMA above 200-day SMA.</li>
+              <li><strong className="text-slate-700">Rule 3:</strong> MACD(12, 26, 9) line above the signal line.</li>
+              <li><strong className="text-slate-700">Rule 4:</strong> RSI(14) between 45 and 70 inclusive.</li>
             </ul>
+            <p className="text-xs text-slate-600 leading-relaxed mt-2">
+              <strong className="text-slate-700">Eligibility:</strong> A stock is classified as Eligible when it has sufficient data (&ge; 252 bars) and a technical score &ge; 2. If fewer than 10 holdings are eligible, the optimizer transparently includes the highest-scoring data-sufficient fallback candidates and labels them as fallback holdings.
+            </p>
           </div>
 
           {/* Pillar 3: Minimum-Variance Optimization */}
@@ -88,6 +92,7 @@ export const MethodologySection: React.FC = () => {
               Investors and researchers must consider specific risk factors:
             </p>
             <ul className="text-xs text-slate-600 mt-2 space-y-1 list-disc list-inside">
+              <li><strong className="text-slate-700">Historical illustration only:</strong> optimized weights are estimated using the displayed lookback period. Results are in-sample, not an out-of-sample or rolling backtest, and do not indicate future performance.</li>
               <li><strong className="text-slate-700">Discretionary Sensitivity:</strong> Experience spending is highly correlated with disposable income and recessionary cycles.</li>
               <li><strong className="text-slate-700">Exogenous Shocks:</strong> Geopolitical tensions, fuel price spikes, or health emergencies disproportionately impact travel corridors.</li>
               <li><strong className="text-slate-700">Estimation Risk:</strong> Past covariance and momentum relationships may decouple during rapid market regime shifts.</li>
