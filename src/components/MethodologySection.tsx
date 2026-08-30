@@ -63,16 +63,16 @@ export const MethodologySection: React.FC = () => {
               <div className="p-1.5 bg-indigo-100 text-indigo-800 rounded">
                 <Scale className="w-4 h-4" />
               </div>
-              <h3>3. Minimum-Variance Optimization</h3>
+              <h3>3. Minimum-Variance Optimization &amp; Covariance</h3>
             </div>
             <p className="text-xs text-slate-600 leading-relaxed">
               Portfolio allocations avoid arbitrary capitalization weighting by formulating a quadratic risk minimization problem:
             </p>
             <div className="my-2 p-2 bg-white rounded border border-slate-200 font-mono text-[11px] text-slate-800 text-center">
-              Minimize: wᵀ Σ w &nbsp;|&nbsp; Subject to: Σ wᵢ = 1.0, &nbsp;2% ≤ wᵢ ≤ 10%
+              Minimize: (1/2) wᵀ Σ w &nbsp;|&nbsp; Subject to: Σ wᵢ = 1.0, &nbsp;0.0% ≤ wᵢ ≤ 20.0%
             </div>
             <p className="text-xs text-slate-600 leading-relaxed">
-              Historical covariance (Σ) is estimated using Ledoit-Wolf shrinkage to reduce sample error, with single-asset position limits bounded between 2.0% and 10.0%.
+              Sample covariance matrices are expected to be positive semidefinite in theory; the dashboard validates usable finite diagonal variances and optimizer constraints via a positive diagonal variance check before running projected gradient descent.
             </p>
           </div>
 

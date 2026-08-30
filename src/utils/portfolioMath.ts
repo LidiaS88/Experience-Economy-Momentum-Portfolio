@@ -192,7 +192,7 @@ export function calculateCovarianceMatrix(
       dailyCovariance: [],
       annualizedCovariance: [],
       sampleSize: dateCount,
-      isPositiveDefinite: false,
+      hasPositiveDiagonalVariances: false,
     };
   }
 
@@ -233,11 +233,12 @@ export function calculateCovarianceMatrix(
     }
   }
 
-  // Verify positive diagonal (variances > 0)
-  let isPositiveDefinite = true;
+  // Positive diagonal variance check: every diagonal covariance value must be finite and greater than zero
+  let hasPositiveDiagonalVariances = true;
   for (let i = 0; i < n; i++) {
-    if (dailyCovariance[i][i] <= 0 || isNaN(dailyCovariance[i][i])) {
-      isPositiveDefinite = false;
+    const diag = dailyCovariance[i][i];
+    if (typeof diag !== 'number' || !Number.isFinite(diag) || isNaN(diag) || diag <= 0) {
+      hasPositiveDiagonalVariances = false;
       break;
     }
   }
@@ -247,7 +248,7 @@ export function calculateCovarianceMatrix(
     dailyCovariance,
     annualizedCovariance,
     sampleSize: dateCount,
-    isPositiveDefinite,
+    hasPositiveDiagonalVariances,
   };
 }
 

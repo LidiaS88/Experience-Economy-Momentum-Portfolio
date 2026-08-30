@@ -74,6 +74,62 @@ export async function generateExecutiveCommentary(
         content: userMessageContent,
       },
     ],
+    response_format: {
+      type: 'json_schema',
+      json_schema: {
+        name: 'experience_economy_executive_commentary',
+        strict: true,
+        schema: {
+          type: 'object',
+          properties: {
+            portfolio_overview: {
+              type: 'string',
+              description:
+                'Executive summary of portfolio strategy, $1M capital deployment, optimizer status, and key risk/return comparisons.',
+            },
+            signal_summary: {
+              type: 'string',
+              description:
+                'Analysis of technical momentum score distribution, passing percentage, and sector concentrations.',
+            },
+            primary_risks: {
+              type: 'array',
+              items: { type: 'string' },
+              minItems: 3,
+              maxItems: 3,
+              description: 'Array of exactly 3 primary risk factors and vulnerabilities.',
+            },
+            data_limitations: {
+              type: 'array',
+              items: { type: 'string' },
+              minItems: 1,
+              description:
+                'Array with at least 1 data limitation, sample bias, or model caveat.',
+            },
+            committee_questions: {
+              type: 'array',
+              items: { type: 'string' },
+              minItems: 2,
+              maxItems: 2,
+              description:
+                'Array of exactly 2 investment committee discussion prompts.',
+            },
+          },
+          required: [
+            'portfolio_overview',
+            'signal_summary',
+            'primary_risks',
+            'data_limitations',
+            'committee_questions',
+          ],
+          additionalProperties: false,
+        },
+      },
+    },
+    provider: {
+      require_parameters: true,
+    },
+    max_tokens: 1000,
     temperature: 0.15,
   };
 
@@ -110,6 +166,10 @@ export async function generateExecutiveCommentary(
       throw new Error(`OpenRouter Model Not Found (404): Model "${trimmedModel}" was not found or is unavailable.`);
     } else if (response.status === 429) {
       throw new Error(`OpenRouter Rate Limit (429): ${errorDetail || 'Too many requests. Please wait a moment.'}`);
+    } else if (response.status === 400 || response.status === 422) {
+      throw new Error(
+        `OpenRouter Request / Schema Error (${response.status}): ${errorDetail || 'The selected model or provider may not support strict JSON schema outputs or the requested parameters.'}`
+      );
     } else {
       throw new Error(`OpenRouter API Error (${response.status}): ${errorDetail}`);
     }

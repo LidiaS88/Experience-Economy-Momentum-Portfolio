@@ -135,7 +135,7 @@ export const PortfolioReadiness: React.FC<PortfolioReadinessProps> = ({ dataMap 
               <div className="p-3 bg-white rounded-lg border border-indigo-200">
                 <div className="font-bold text-indigo-900 mb-1">2. Covariance &amp; Correlation</div>
                 <p className="text-slate-600 text-[11px] leading-relaxed">
-                  Sample covariance with Bessel correction <span className="font-mono font-semibold">1 / (T - 1)</span>. Annualized covariance is <span className="font-mono font-semibold">Cov_daily &times; 252</span>. Correlation clamped in [-1, 1].
+                  Sample covariance with Bessel correction <span className="font-mono font-semibold">1 / (T - 1)</span>. Annualized covariance is <span className="font-mono font-semibold">Cov_daily &times; 252</span>. Validates finite positive diagonal variances (<span className="font-mono font-semibold">&sigma;_i^2 &gt; 0</span>) via positive diagonal variance check.
                 </p>
               </div>
 

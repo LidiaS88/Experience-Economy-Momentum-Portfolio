@@ -39,7 +39,7 @@ export function buildPortfolioReviewObject(
   const knownLimitations: string[] = [
     'Pure educational simulation model — not investment advice or fiduciary recommendation.',
     'Historical lookback performance does not guarantee future market returns or risk profiles.',
-    'Sample covariance matrix assumes stationary return distribution over the evaluation window.',
+    'Sample covariance matrices are expected to be positive semidefinite in theory; the dashboard validates usable finite diagonal variances and optimizer constraints.',
     'Sharpe ratio assumes a 0.00% benchmark risk-free rate.',
     'Constrained box boundary w_i <= 20.00% is enforced via Projected Gradient Descent (PGD).',
   ];
@@ -184,7 +184,7 @@ export function buildPortfolioReviewObject(
       fallbackAssetCount: optimizationResult.fallbackCount,
       fallbackAssets,
       fallbackReasonMessage: optimizationResult.isFallbackActive
-        ? `Fewer than 10 stocks passed technical momentum filters. Added ${optimizationResult.fallbackCount} highest-scoring candidate(s) to guarantee positive semi-definite covariance conditioning and standard diversification.`
+        ? `Fewer than 10 stocks passed technical momentum filters. Added ${optimizationResult.fallbackCount} highest-scoring candidate(s) to guarantee positive diagonal variances and standard diversification.`
         : 'None (All active holdings met strict 4-factor momentum screening criteria).',
     },
     knownLimitationsAndDataFailures: [

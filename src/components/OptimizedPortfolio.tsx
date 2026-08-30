@@ -332,7 +332,7 @@ export const OptimizedPortfolio: React.FC<OptimizedPortfolioProps> = ({
                 <div className="text-[11px] text-slate-500 pl-4 space-y-0.5">
                   <div>&bull; Minimum 10 assets with &ge; 252 valid daily price bars</div>
                   <div>&bull; Common overlapping trading date history</div>
-                  <div>&bull; Symmetric positive semi-definite covariance matrix</div>
+                  <div>&bull; Symmetric covariance matrix with positive diagonal variance check</div>
                 </div>
               </div>
               <p className="text-[11px] text-slate-400 mt-4">

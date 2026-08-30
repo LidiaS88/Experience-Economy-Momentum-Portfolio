@@ -127,7 +127,7 @@ export interface CovarianceMatrixResult {
   dailyCovariance: number[][];
   annualizedCovariance: number[][];
   sampleSize: number;
-  isPositiveDefinite: boolean;
+  hasPositiveDiagonalVariances: boolean;
 }
 
 export interface CorrelationMatrixResult {
