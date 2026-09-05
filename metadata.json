@@ -1,5 +1,5 @@
 {
-  "name": "Experience Economy Momentum Portfolio",
+  "name": "Travel & Experience Portfolio Monitor",
   "description": "A rules-based, educational portfolio of travel, leisure, and experience-economy equities",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]

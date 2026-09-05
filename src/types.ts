@@ -72,7 +72,7 @@ export interface SymbolDataRecord {
 
 export type SymbolDataMap = Record<string, SymbolDataRecord>;
 
-export type EligibilityStatus = 'Eligible' | 'Ineligible' | 'Data unavailable';
+export type EligibilityStatus = 'Eligible' | 'Fallback Included' | 'Ineligible' | 'Data unavailable';
 export type TechnicalRatingLabel = 'Constructive' | 'Mixed' | 'Caution' | 'Data unavailable';
 
 export interface TechnicalScoreBreakdown {
@@ -188,6 +188,7 @@ export interface OptimizerValidation {
   weightSum: number;
   weightSumTolerancePassed: boolean;
   noNegativeWeights: boolean;
+  minWeightConstraintPassed?: boolean;
   maxWeightConstraintPassed: boolean;
   allHoldingsWeighted: boolean;
   largestWeight: number;

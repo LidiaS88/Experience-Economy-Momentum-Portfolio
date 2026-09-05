@@ -98,7 +98,7 @@ export const DataAccessPanel: React.FC<DataAccessPanelProps> = ({
             type="button"
             onClick={handleTestConnection}
             disabled={isTesting}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-lg transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-emerald-900 bg-emerald-100 hover:bg-emerald-200 border border-emerald-300 rounded-lg transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
             title="Fetch DAL 600-day daily price series to verify API connectivity"
           >
             {isTesting ? (
@@ -108,7 +108,7 @@ export const DataAccessPanel: React.FC<DataAccessPanelProps> = ({
               </>
             ) : (
               <>
-                <Play className="w-3.5 h-3.5 fill-current" />
+                <Play className="w-3.5 h-3.5 fill-current text-emerald-700" />
                 <span>Test Twelve Data Connection (DAL)</span>
               </>
             )}
@@ -118,10 +118,10 @@ export const DataAccessPanel: React.FC<DataAccessPanelProps> = ({
             id="clear-keys-button"
             type="button"
             onClick={handleClear}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200 rounded-lg transition-colors cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-emerald-950 bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 rounded-lg transition-colors cursor-pointer"
             title="Wipe credentials from JavaScript memory"
           >
-            <Trash2 className="w-3.5 h-3.5" />
+            <Trash2 className="w-3.5 h-3.5 text-emerald-700" />
             <span>Clear keys</span>
           </button>
         </div>
@@ -149,7 +149,7 @@ export const DataAccessPanel: React.FC<DataAccessPanelProps> = ({
                 placeholder="Enter Twelve Data API key..."
                 value={apiKeys.twelveDataApiKey}
                 onChange={(e) => onUpdateKeys({ twelveDataApiKey: e.target.value })}
-                className="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white text-slate-900 placeholder:text-slate-400 font-mono"
+                className="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:bg-white text-slate-900 placeholder:text-slate-400 font-mono"
               />
             </div>
             <p className="text-[11px] text-slate-500 mt-1">
@@ -176,7 +176,7 @@ export const DataAccessPanel: React.FC<DataAccessPanelProps> = ({
                 placeholder="Enter OpenRouter API key..."
                 value={apiKeys.openRouterApiKey}
                 onChange={(e) => onUpdateKeys({ openRouterApiKey: e.target.value })}
-                className="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white text-slate-900 placeholder:text-slate-400 font-mono"
+                className="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:bg-white text-slate-900 placeholder:text-slate-400 font-mono"
               />
             </div>
             <p className="text-[11px] text-slate-500 mt-1">
@@ -198,7 +198,7 @@ export const DataAccessPanel: React.FC<DataAccessPanelProps> = ({
                 placeholder="e.g., anthropic/claude-3.7-sonnet"
                 value={apiKeys.openRouterModel}
                 onChange={(e) => onUpdateKeys({ openRouterModel: e.target.value })}
-                className="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white text-slate-900 placeholder:text-slate-400 font-mono"
+                className="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:bg-white text-slate-900 placeholder:text-slate-400 font-mono"
               />
             </div>
             <p className="text-[11px] text-slate-500 mt-1">
@@ -222,8 +222,8 @@ export const DataAccessPanel: React.FC<DataAccessPanelProps> = ({
             id="twelve-data-test-result-panel"
             className={`mt-4 rounded-lg border p-4 text-xs ${
               testResult.status === 'ok'
-                ? 'bg-emerald-50/70 border-emerald-200 text-emerald-950'
-                : 'bg-rose-50/70 border-rose-200 text-rose-950'
+                ? 'bg-emerald-50/70 border-emerald-300 text-emerald-950'
+                : 'bg-emerald-100/90 border-emerald-400 text-emerald-950'
             }`}
           >
             <div className="flex items-center justify-between pb-2 mb-3 border-b border-inherit">
@@ -231,7 +231,7 @@ export const DataAccessPanel: React.FC<DataAccessPanelProps> = ({
                 {testResult.status === 'ok' ? (
                   <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
                 ) : (
-                  <XCircle className="w-4 h-4 text-rose-600 shrink-0" />
+                  <XCircle className="w-4 h-4 text-emerald-800 shrink-0" />
                 )}
                 <span className="font-bold text-sm">
                   {testResult.status === 'ok'
@@ -308,12 +308,12 @@ export const DataAccessPanel: React.FC<DataAccessPanelProps> = ({
               <TechnicalIndicatorTest symbol={testResult.symbol} data={testResult.data} />
               </>
             ) : (
-              <div className="p-3 bg-white/80 rounded border border-rose-200">
+              <div className="p-3 bg-emerald-50 rounded border border-emerald-300">
                 <div className="flex items-start gap-2">
-                  <AlertTriangle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
+                  <AlertTriangle className="w-4 h-4 text-emerald-800 shrink-0 mt-0.5" />
                   <div>
-                    <div className="font-semibold text-rose-900">Diagnosis &amp; Error Details:</div>
-                    <p className="text-rose-800 mt-0.5 leading-relaxed font-mono text-[11px]">
+                    <div className="font-semibold text-emerald-950">Diagnosis &amp; Error Details:</div>
+                    <p className="text-emerald-900 mt-0.5 leading-relaxed font-mono text-[11px]">
                       {testResult.message}
                     </p>
                     <p className="text-slate-500 text-[11px] mt-1.5">

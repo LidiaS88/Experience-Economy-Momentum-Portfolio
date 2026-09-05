@@ -20,49 +20,57 @@ import {
 import { BENCHMARK } from '../config';
 
 export const TOTAL_PORTFOLIO_CAPITAL = 1_000_000;
+export const MIN_WEIGHT_CONSTRAINT = 0.02; // 2% minimum individual asset floor
 export const MAX_WEIGHT_CONSTRAINT = 0.20; // 20% maximum individual asset cap
-export const MIN_REQUIRED_HOLDINGS = 10;
+export const MIN_REQUIRED_HOLDINGS = 15;
 export const DEFAULT_MAX_ITERATIONS = 1000;
 export const DEFAULT_TOLERANCE = 1e-7;
 
 /**
- * Calculates the Euclidean projection of a vector y onto the capped probability simplex:
- * S = { w in R^N | sum(w_i) = 1, 0 <= w_i <= u }
+ * Calculates the Euclidean projection of a vector y onto the bounded probability simplex:
+ * S = { w in R^N | sum(w_i) = 1, l <= w_i <= u }
  *
  * Mathematical Algorithm:
- * From the KKT optimality conditions of min 0.5 * ||w - y||^2 subject to sum(w) = 1, 0 <= w <= u:
+ * From the KKT optimality conditions of min 0.5 * ||w - y||^2 subject to sum(w) = 1, l <= w <= u:
  * There exists a scalar Lagrange multiplier lambda* such that:
- *   w_i*(lambda*) = clip(y_i - lambda*, 0, u) = min(u, max(0, y_i - lambda*))
- * and g(lambda) = sum_{i=1}^N clip(y_i - lambda, 0, u) = 1.0.
+ *   w_i*(lambda*) = clip(y_i - lambda*, l, u) = min(u, max(l, y_i - lambda*))
+ * and g(lambda) = sum_{i=1}^N clip(y_i - lambda, l, u) = 1.0.
  *
  * Since g(lambda) is continuous and strictly monotonically non-increasing in lambda:
  * We solve g(lambda) = 1 using binary bisection search to machine precision (< 1e-15 error).
  *
  * @param y Unconstrained target vector in R^N
  * @param u Upper bound cap (0.20 for 20% max weight)
- * @returns Feasible vector w in S satisfying sum(w_i) = 1.0 and 0 <= w_i <= u
+ * @param l Lower bound floor (0.02 for 2% min weight)
+ * @returns Feasible vector w in S satisfying sum(w_i) = 1.0 and l <= w_i <= u
  */
-export function projectOntoCappedSimplex(y: number[], u: number = MAX_WEIGHT_CONSTRAINT): number[] {
+export function projectOntoCappedSimplex(
+  y: number[],
+  u: number = MAX_WEIGHT_CONSTRAINT,
+  l: number = MIN_WEIGHT_CONSTRAINT
+): number[] {
   const n = y.length;
   if (n === 0) return [];
   if (n === 1) return [1.0];
 
-  // If n * u < 1.0, the capped simplex is mathematically empty.
-  // When n >= 10 and u = 0.20, n * u >= 2.0 >= 1.0, guaranteeing non-emptiness.
+  // If n * u < 1.0 or n * l > 1.0, the bounded simplex is mathematically empty.
   if (n * u < 1.0 - 1e-9) {
     throw new Error(`Cannot project onto capped simplex: n (${n}) * u (${u}) < 1.0`);
+  }
+  if (n * l > 1.0 + 1e-9) {
+    throw new Error(`Cannot project onto capped simplex: n (${n}) * l (${l}) > 1.0`);
   }
 
   // Bracket the Lagrange multiplier lambda
   let low = Math.min(...y) - u;
-  let high = Math.max(...y);
+  let high = Math.max(...y) - l;
 
   // Perform 60 bisection iterations for ultra-high numerical accuracy
   for (let iter = 0; iter < 60; iter++) {
     const mid = (low + high) / 2;
     let sum = 0;
     for (let i = 0; i < n; i++) {
-      sum += Math.min(u, Math.max(0, y[i] - mid));
+      sum += Math.min(u, Math.max(l, y[i] - mid));
     }
 
     if (sum > 1.0) {
@@ -73,14 +81,14 @@ export function projectOntoCappedSimplex(y: number[], u: number = MAX_WEIGHT_CON
   }
 
   const lambda = (low + high) / 2;
-  let projected = y.map((val) => Math.min(u, Math.max(0, val - lambda)));
+  let projected = y.map((val) => Math.min(u, Math.max(l, val - lambda)));
 
   // Final micro-normalization to ensure sum === 1.0 exactly
   let currentSum = projected.reduce((acc, v) => acc + v, 0);
   if (currentSum > 0 && Math.abs(currentSum - 1.0) > 1e-12) {
     projected = projected.map((v) => v / currentSum);
-    // Guard against microscopic numerical leak over u
-    projected = projected.map((v) => Math.min(u, Math.max(0, v)));
+    // Guard against microscopic numerical leak over u or under l
+    projected = projected.map((v) => Math.min(u, Math.max(l, v)));
     currentSum = projected.reduce((acc, v) => acc + v, 0);
     projected = projected.map((v) => v / currentSum);
   }
@@ -138,7 +146,9 @@ export function computePortfolioVariance(sigma: number[][], w: number[]): number
  */
 export function validateOptimizedWeights(
   weights: number[],
-  tickers: string[]
+  tickers: string[],
+  maxWeight: number = MAX_WEIGHT_CONSTRAINT,
+  minWeight: number = MIN_WEIGHT_CONSTRAINT
 ): OptimizerValidation {
   const validationErrors: string[] = [];
 
@@ -169,7 +179,19 @@ export function validateOptimizedWeights(
     }
   }
 
-  // 3. Maximum position constraint check (<= 20%)
+  // 3. Minimum position constraint check (>= 2%)
+  let minWeightConstraintPassed = true;
+  for (let i = 0; i < weights.length; i++) {
+    const w = weights[i];
+    if (w < minWeight - 1e-4) {
+      minWeightConstraintPassed = false;
+      validationErrors.push(
+        `Holding ${tickers[i]} weight ${(w * 100).toFixed(2)}% is below the ${(minWeight * 100).toFixed(2)}% minimum floor constraint.`
+      );
+    }
+  }
+
+  // 4. Maximum position constraint check (<= 20%)
   let maxWeightConstraintPassed = true;
   let largestWeight = 0;
   let smallestWeight = 1.0;
@@ -179,15 +201,15 @@ export function validateOptimizedWeights(
     if (w > largestWeight) largestWeight = w;
     if (w < smallestWeight) smallestWeight = w;
 
-    if (w > MAX_WEIGHT_CONSTRAINT + 1e-4) {
+    if (w > maxWeight + 1e-4) {
       maxWeightConstraintPassed = false;
       validationErrors.push(
-        `Holding ${tickers[i]} weight ${(w * 100).toFixed(2)}% exceeds the 20.00% maximum cap constraint.`
+        `Holding ${tickers[i]} weight ${(w * 100).toFixed(2)}% exceeds the ${(maxWeight * 100).toFixed(2)}% maximum cap constraint.`
       );
     }
   }
 
-  // 4. All holdings weighted
+  // 5. All holdings weighted
   const allHoldingsWeighted = weights.every(
     (w) => typeof w === 'number' && !isNaN(w) && isFinite(w)
   );
@@ -198,6 +220,7 @@ export function validateOptimizedWeights(
   const isValid =
     weightSumTolerancePassed &&
     noNegativeWeights &&
+    minWeightConstraintPassed &&
     maxWeightConstraintPassed &&
     allHoldingsWeighted &&
     validationErrors.length === 0;
@@ -207,6 +230,7 @@ export function validateOptimizedWeights(
     weightSum,
     weightSumTolerancePassed,
     noNegativeWeights,
+    minWeightConstraintPassed,
     maxWeightConstraintPassed,
     allHoldingsWeighted,
     largestWeight,
@@ -220,24 +244,28 @@ export function validateOptimizedWeights(
  *
  * minimize    0.5 * w^T * Sigma * w
  * subject to  sum(w_i) = 1.0
- *             0 <= w_i <= 0.20  for all i = 1, ..., N
+ *             0.02 <= w_i <= 0.20  for all i = 1, ..., N
  *
  * Algorithm: Projected Gradient Descent (PGD) with Armijo Backtracking Line Search.
- * - Initial Point: Uniform Equal Weights w_0 = [1/N, ..., 1/N]^T (strictly feasible for N >= 5).
+ * - Initial Point: Uniform Equal Weights w_0 = [1/N, ..., 1/N]^T (strictly feasible for N in [5, 50]).
  * - Gradient: grad f(w) = Sigma * w.
- * - Projection: Exact root-finding projection onto the capped probability simplex.
+ * - Projection: Exact root-finding projection onto the bounded probability simplex [0.02, 0.20].
  *
  * @param sigma Annualized N x N covariance matrix
  * @param tickers Array of N ticker symbols
  * @param maxIterations Maximum iterations (default 1000)
  * @param tolerance Convergence tolerance (default 1e-7)
+ * @param maxWeight Maximum asset weight cap (default 0.20)
+ * @param minWeight Minimum asset weight floor (default 0.02)
  * @returns Optimal weights, iteration count, and convergence flag
  */
 export function solveMinimumVariancePGD(
   sigma: number[][],
   tickers: string[],
   maxIterations: number = DEFAULT_MAX_ITERATIONS,
-  tolerance: number = DEFAULT_TOLERANCE
+  tolerance: number = DEFAULT_TOLERANCE,
+  maxWeight: number = MAX_WEIGHT_CONSTRAINT,
+  minWeight: number = MIN_WEIGHT_CONSTRAINT
 ): {
   weights: number[];
   iterations: number;
@@ -295,8 +323,8 @@ export function solveMinimumVariancePGD(
         y[i] = w[i] - alpha * grad[i];
       }
 
-      // Project y onto capped simplex S = {w | sum(w)=1, 0 <= w <= 0.20}
-      const candidateW = projectOntoCappedSimplex(y, MAX_WEIGHT_CONSTRAINT);
+      // Project y onto bounded simplex S = {w | sum(w)=1, minWeight <= w <= maxWeight}
+      const candidateW = projectOntoCappedSimplex(y, maxWeight, minWeight);
 
       const candidateObj = 0.5 * computePortfolioVariance(sigma, candidateW);
 
@@ -322,7 +350,7 @@ export function solveMinimumVariancePGD(
       for (let i = 0; i < n; i++) {
         y[i] = w[i] - alpha * grad[i];
       }
-      nextW = projectOntoCappedSimplex(y, MAX_WEIGHT_CONSTRAINT);
+      nextW = projectOntoCappedSimplex(y, maxWeight, minWeight);
     }
 
     // Check step convergence ||nextW - w||_inf < tolerance
@@ -431,28 +459,35 @@ export function runPortfolioOptimizer(
     };
   }
 
-  // 2. Separate into Eligible (Score >= 2) and Ineligible (Score < 2)
+  // 2. Separate candidates: Eligible, Fallback Included, and Remaining
   const eligibleCandidates = dataSufficientCandidates.filter(
     (item) => item.eligibility === 'Eligible'
   );
-  const ineligibleCandidates = dataSufficientCandidates.filter(
-    (item) => item.eligibility === 'Ineligible'
+  const fallbackCandidates = dataSufficientCandidates.filter(
+    (item) => item.eligibility === 'Fallback Included'
+  );
+  const remainingCandidates = dataSufficientCandidates.filter(
+    (item) => item.eligibility !== 'Eligible' && item.eligibility !== 'Fallback Included'
   );
 
-  // Sort ineligible candidates by technicalScore desc, then trailing60Return desc, then ticker asc
-  ineligibleCandidates.sort((a, b) => {
-    const scoreA = a.technicalScore ?? 0;
-    const scoreB = b.technicalScore ?? 0;
+  // Sort remaining candidates by technicalScore desc, trailing60Return desc, annualizedVolatility asc, ticker asc
+  remainingCandidates.sort((a, b) => {
+    const scoreA = a.technicalScore ?? -1;
+    const scoreB = b.technicalScore ?? -1;
     if (scoreB !== scoreA) return scoreB - scoreA;
 
     const retA = a.trailing60Return ?? -Infinity;
     const retB = b.trailing60Return ?? -Infinity;
-    if (retB !== retA) return retB - retA;
+    if (Math.abs(retB - retA) > 1e-9) return retB - retA;
+
+    const volA = a.annualizedVolatility ?? Infinity;
+    const volB = b.annualizedVolatility ?? Infinity;
+    if (Math.abs(volA - volB) > 1e-9) return volA - volB;
 
     return a.ticker.localeCompare(b.ticker);
   });
 
-  // Requirement 1 & 2: Candidate Selection Logic
+  // Candidate Selection Logic
   interface CandidateWithTag {
     item: CandidateScreeningItem;
     inclusionReason: InclusionReason;
@@ -460,25 +495,24 @@ export function runPortfolioOptimizer(
 
   const selectedWithTags: CandidateWithTag[] = [];
 
-  if (eligibleCandidates.length >= MIN_REQUIRED_HOLDINGS) {
-    // Case 1: At least 10 eligible stocks -> optimize all eligible stocks
-    for (const item of eligibleCandidates) {
-      selectedWithTags.push({
-        item,
-        inclusionReason: 'Eligible Technical Pass',
-      });
-    }
-  } else {
-    // Case 2: Fewer than 10 eligible stocks -> add highest-scoring fallback candidates
-    for (const item of eligibleCandidates) {
-      selectedWithTags.push({
-        item,
-        inclusionReason: 'Eligible Technical Pass',
-      });
-    }
+  for (const item of eligibleCandidates) {
+    selectedWithTags.push({
+      item,
+      inclusionReason: 'Eligible Technical Pass',
+    });
+  }
 
-    const neededFallbacks = MIN_REQUIRED_HOLDINGS - eligibleCandidates.length;
-    const fallbackSlice = ineligibleCandidates.slice(0, neededFallbacks);
+  for (const item of fallbackCandidates) {
+    selectedWithTags.push({
+      item,
+      inclusionReason: 'Fallback included',
+    });
+  }
+
+  // If still fewer than MIN_REQUIRED_HOLDINGS (15), add highest-scoring fallback candidates
+  if (selectedWithTags.length < MIN_REQUIRED_HOLDINGS) {
+    const neededFallbacks = MIN_REQUIRED_HOLDINGS - selectedWithTags.length;
+    const fallbackSlice = remainingCandidates.slice(0, neededFallbacks);
 
     for (const item of fallbackSlice) {
       selectedWithTags.push({
@@ -560,7 +594,9 @@ export function runPortfolioOptimizer(
     sigmaAnn,
     includedTickers,
     DEFAULT_MAX_ITERATIONS,
-    DEFAULT_TOLERANCE
+    DEFAULT_TOLERANCE,
+    MAX_WEIGHT_CONSTRAINT,
+    MIN_WEIGHT_CONSTRAINT
   );
 
   let finalWeights = optimization.weights;
@@ -568,7 +604,12 @@ export function runPortfolioOptimizer(
   let statusMessage = `Optimal solution converged in ${optimization.iterations} iterations (Projected Gradient Descent).`;
 
   // 5. Post-Optimization Institutional Validation
-  let validation = validateOptimizedWeights(finalWeights, includedTickers);
+  let validation = validateOptimizedWeights(
+    finalWeights,
+    includedTickers,
+    MAX_WEIGHT_CONSTRAINT,
+    MIN_WEIGHT_CONSTRAINT
+  );
 
   // Requirement 7: Fallback to Equal Weights if validation fails
   if (!validation.isValid) {
@@ -578,7 +619,12 @@ export function runPortfolioOptimizer(
       100
     ).toFixed(2)}% per holding) across ${includedCount} positions.`;
     finalWeights = new Array(includedCount).fill(1.0 / includedCount);
-    validation = validateOptimizedWeights(finalWeights, includedTickers);
+    validation = validateOptimizedWeights(
+      finalWeights,
+      includedTickers,
+      MAX_WEIGHT_CONSTRAINT,
+      MIN_WEIGHT_CONSTRAINT
+    );
   }
 
   // 6. Compute Portfolio Volatilities (Min-Var vs Equal-Weight)

@@ -64,11 +64,11 @@ export const PortfolioReadiness: React.FC<PortfolioReadinessProps> = ({ dataMap 
 
   // Correlation heatmap color helper
   const getCorrelationColor = (val: number) => {
-    if (val >= 0.8) return 'bg-blue-100 text-blue-900 font-bold';
-    if (val >= 0.5) return 'bg-blue-50 text-blue-800 font-semibold';
-    if (val >= 0.2) return 'bg-slate-50 text-slate-800';
-    if (val >= -0.2) return 'bg-emerald-50 text-emerald-800';
-    return 'bg-rose-50 text-rose-800';
+    if (val >= 0.8) return 'bg-emerald-200 text-emerald-950 font-bold';
+    if (val >= 0.5) return 'bg-emerald-100 text-emerald-900 font-semibold';
+    if (val >= 0.2) return 'bg-emerald-50 text-emerald-800';
+    if (val >= -0.2) return 'bg-lime-50 text-lime-800';
+    return 'bg-lime-100 text-lime-950';
   };
 
   const ew = readiness.equalWeightPerformance;
@@ -80,7 +80,7 @@ export const PortfolioReadiness: React.FC<PortfolioReadinessProps> = ({ dataMap 
         {/* Header Bar */}
         <div className="p-5 border-b border-slate-200 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 bg-slate-50/75">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 bg-indigo-50 border border-indigo-200 rounded-lg text-indigo-700">
+            <div className="p-2 bg-emerald-100 border border-emerald-300 rounded-lg text-emerald-800">
               <Scale className="w-5 h-5" />
             </div>
             <div>
@@ -92,7 +92,7 @@ export const PortfolioReadiness: React.FC<PortfolioReadinessProps> = ({ dataMap 
                   className={`text-[11px] font-semibold px-2 py-0.5 rounded border ${
                     readiness.covarianceStatus === 'Ready'
                       ? 'bg-emerald-100 text-emerald-800 border-emerald-300'
-                      : 'bg-amber-100 text-amber-800 border-amber-300'
+                      : 'bg-lime-100 text-lime-900 border-lime-300'
                   }`}
                 >
                   {readiness.covarianceStatus === 'Ready' ? 'Optimization Ready' : 'Data Incomplete'}
@@ -111,7 +111,7 @@ export const PortfolioReadiness: React.FC<PortfolioReadinessProps> = ({ dataMap 
               onClick={() => setShowFormulaModal(!showFormulaModal)}
               className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-700 bg-white hover:bg-slate-100 border border-slate-300 rounded-lg transition-colors cursor-pointer"
             >
-              <Info className="w-3.5 h-3.5 text-indigo-600" />
+              <Info className="w-3.5 h-3.5 text-emerald-700" />
               <span>{showFormulaModal ? 'Hide Math Specs' : 'Inspect Math &amp; Formulas'}</span>
             </button>
           </div>
@@ -119,28 +119,28 @@ export const PortfolioReadiness: React.FC<PortfolioReadinessProps> = ({ dataMap 
 
         {/* Mathematical Specifications Callout */}
         {showFormulaModal && (
-          <div id="readiness-math-callout" className="p-4 sm:p-5 bg-indigo-50/50 border-b border-indigo-100 text-xs text-slate-700">
+          <div id="readiness-math-callout" className="p-4 sm:p-5 bg-emerald-50/50 border-b border-emerald-200 text-xs text-slate-700">
             <div className="flex items-center gap-2 font-bold text-slate-900 mb-2">
-              <Shield className="w-4 h-4 text-indigo-600" />
+              <Shield className="w-4 h-4 text-emerald-700" />
               <span>Pure Deterministic Financial Mathematics Framework</span>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
-              <div className="p-3 bg-white rounded-lg border border-indigo-200">
-                <div className="font-bold text-indigo-900 mb-1">1. Date Alignment &amp; Return Series</div>
+              <div className="p-3 bg-white rounded-lg border border-emerald-200">
+                <div className="font-bold text-emerald-950 mb-1">1. Date Alignment &amp; Return Series</div>
                 <p className="text-slate-600 text-[11px] leading-relaxed">
                   Simple daily returns <span className="font-mono font-semibold">r_t = (P_t - P_{'{t-1}'}) / P_{'{t-1}'}</span>. Matrix uses strictly shared common trading dates without zero-filling or forward filling.
                 </p>
               </div>
 
-              <div className="p-3 bg-white rounded-lg border border-indigo-200">
-                <div className="font-bold text-indigo-900 mb-1">2. Covariance &amp; Correlation</div>
+              <div className="p-3 bg-white rounded-lg border border-emerald-200">
+                <div className="font-bold text-emerald-950 mb-1">2. Covariance &amp; Correlation</div>
                 <p className="text-slate-600 text-[11px] leading-relaxed">
                   Sample covariance with Bessel correction <span className="font-mono font-semibold">1 / (T - 1)</span>. Annualized covariance is <span className="font-mono font-semibold">Cov_daily &times; 252</span>. Validates finite positive diagonal variances (<span className="font-mono font-semibold">&sigma;_i^2 &gt; 0</span>) via positive diagonal variance check.
                 </p>
               </div>
 
-              <div className="p-3 bg-white rounded-lg border border-indigo-200">
-                <div className="font-bold text-indigo-900 mb-1">3. Performance &amp; Sharpe Ratio</div>
+              <div className="p-3 bg-white rounded-lg border border-emerald-200">
+                <div className="font-bold text-emerald-950 mb-1">3. Performance &amp; Sharpe Ratio</div>
                 <p className="text-slate-600 text-[11px] leading-relaxed">
                   CAGR = <span className="font-mono font-semibold">(1 + CumReturn)^(252 / T) - 1</span>, Volatility = <span className="font-mono font-semibold">StdDev &times; &radic;252</span>, Sharpe uses <strong>0.0% displayed risk-free rate</strong> assumption.
                 </p>
@@ -149,19 +149,19 @@ export const PortfolioReadiness: React.FC<PortfolioReadinessProps> = ({ dataMap 
           </div>
         )}
 
-        {/* Prominent Warning if fewer than 10 stocks are eligible */}
+        {/* Prominent Warning if fewer than 15 stocks are qualified */}
         {readiness.isEligibleBelowThreshold && (
           <div
             id="eligible-threshold-warning"
-            className="p-4 bg-amber-50 border-b border-amber-200 flex items-start gap-3 text-xs text-amber-900"
+            className="p-4 bg-lime-50/70 border-b border-lime-300 flex items-start gap-3 text-xs text-lime-950"
           >
-            <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+            <AlertTriangle className="w-5 h-5 text-lime-700 shrink-0 mt-0.5" />
             <div>
-              <div className="font-bold text-amber-950">
-                Fewer than 10 eligible holdings ({readiness.eligibleCount} of 20 stocks qualified)
+              <div className="font-bold text-lime-950">
+                Fewer than 15 qualified holdings ({readiness.eligibleCount} of 20 stocks qualified)
               </div>
-              <p className="mt-0.5 text-amber-800 leading-relaxed">
-                Fewer than 10 eligible holdings; optimization may use the highest-scoring data-sufficient fallback holdings in the next step.
+              <p className="mt-0.5 text-lime-900 leading-relaxed">
+                Fewer than 15 qualified holdings; fallback promotion logic active to maintain 15-stock portfolio floor.
               </p>
             </div>
           </div>
@@ -172,11 +172,11 @@ export const PortfolioReadiness: React.FC<PortfolioReadinessProps> = ({ dataMap 
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 text-xs">
             {/* 1. Eligible Holdings */}
             <div className="p-3 bg-white rounded-lg border border-slate-200">
-              <div className="text-slate-500 text-[10px] uppercase font-semibold">Eligible Holdings</div>
+              <div className="text-slate-500 text-[10px] uppercase font-semibold">Qualified Holdings</div>
               <div className="text-lg font-bold text-slate-900 mt-0.5 font-mono">
                 {readiness.eligibleCount} <span className="text-xs font-normal text-slate-500">/ 20</span>
               </div>
-              <div className="text-[10px] text-slate-400 mt-0.5">Score &ge; 2 / 4</div>
+              <div className="text-[10px] text-slate-400 mt-0.5">15-Stock Floor</div>
             </div>
 
             {/* 2. Common Trading Dates */}
@@ -218,7 +218,7 @@ export const PortfolioReadiness: React.FC<PortfolioReadinessProps> = ({ dataMap 
                     <span>{readiness.eligibleCount}&times;{readiness.eligibleCount} Ready</span>
                   </span>
                 ) : (
-                  <span className="inline-flex items-center gap-1 text-amber-700 font-bold text-xs">
+                  <span className="inline-flex items-center gap-1 text-lime-700 font-bold text-xs">
                     <Clock className="w-3.5 h-3.5" />
                     <span>{readiness.covarianceStatus}</span>
                   </span>
@@ -250,7 +250,7 @@ export const PortfolioReadiness: React.FC<PortfolioReadinessProps> = ({ dataMap 
           {/* Eligible Tickers Pills List */}
           <div className="mt-4 pt-3 border-t border-slate-200 flex flex-wrap items-center gap-2">
             <span className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
-              <Layers className="w-3.5 h-3.5 text-indigo-600" />
+              <Layers className="w-3.5 h-3.5 text-emerald-700" />
               <span>Eligible Tickers ({readiness.eligibleCount}):</span>
             </span>
             {readiness.eligibleTickers.length > 0 ? (
@@ -282,7 +282,7 @@ export const PortfolioReadiness: React.FC<PortfolioReadinessProps> = ({ dataMap 
           <div className="flex items-center justify-between mb-3">
             <div>
               <h3 className="text-sm font-bold text-slate-900 flex items-center gap-1.5">
-                <BarChart3 className="w-4 h-4 text-indigo-600" />
+                <BarChart3 className="w-4 h-4 text-emerald-700" />
                 <span>Pre-Optimization Baseline: Equal-Weight Portfolio vs SPY Benchmark</span>
               </h3>
               <p className="text-xs text-slate-500 mt-0.5">
@@ -296,10 +296,10 @@ export const PortfolioReadiness: React.FC<PortfolioReadinessProps> = ({ dataMap 
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
             {/* 1. Equal Weight Baseline Card */}
-            <div className="p-4 rounded-xl border border-indigo-200 bg-indigo-50/20 shadow-2xs">
-              <div className="flex items-center justify-between pb-2 mb-3 border-b border-indigo-100">
+            <div className="p-4 rounded-xl border border-emerald-200 bg-emerald-50/20 shadow-2xs">
+              <div className="flex items-center justify-between pb-2 mb-3 border-b border-emerald-200">
                 <div className="flex items-center gap-2">
-                  <span className="p-1.5 bg-indigo-100 text-indigo-800 rounded-md font-bold text-xs">
+                  <span className="p-1.5 bg-emerald-100 text-emerald-900 rounded-md font-bold text-xs">
                     EW
                   </span>
                   <div>
@@ -313,7 +313,7 @@ export const PortfolioReadiness: React.FC<PortfolioReadinessProps> = ({ dataMap 
                     </div>
                   </div>
                 </div>
-                <span className="text-xs font-mono font-bold px-2 py-0.5 bg-indigo-100 text-indigo-800 rounded">
+                <span className="text-xs font-mono font-bold px-2 py-0.5 bg-emerald-100 text-emerald-900 rounded">
                   Baseline
                 </span>
               </div>
@@ -323,7 +323,7 @@ export const PortfolioReadiness: React.FC<PortfolioReadinessProps> = ({ dataMap 
                   <div className="text-[10px] text-slate-500 font-sans uppercase font-semibold">Cum. Return</div>
                   <div
                     className={`font-bold text-sm mt-0.5 ${
-                      (ew?.cumulativeReturn ?? 0) >= 0 ? 'text-emerald-700' : 'text-rose-700'
+                      (ew?.cumulativeReturn ?? 0) >= 0 ? 'text-emerald-700' : 'text-emerald-950'
                     }`}
                   >
                     {formatPercent(ew?.cumulativeReturn ?? null, true)}
@@ -334,7 +334,7 @@ export const PortfolioReadiness: React.FC<PortfolioReadinessProps> = ({ dataMap 
                   <div className="text-[10px] text-slate-500 font-sans uppercase font-semibold">Ann. Return</div>
                   <div
                     className={`font-bold text-sm mt-0.5 ${
-                      (ew?.annualizedReturn ?? 0) >= 0 ? 'text-emerald-700' : 'text-rose-700'
+                      (ew?.annualizedReturn ?? 0) >= 0 ? 'text-emerald-700' : 'text-emerald-950'
                     }`}
                   >
                     {formatPercent(ew?.annualizedReturn ?? null, true)}
@@ -350,14 +350,14 @@ export const PortfolioReadiness: React.FC<PortfolioReadinessProps> = ({ dataMap 
 
                 <div className="p-2 bg-white rounded border border-slate-200">
                   <div className="text-[10px] text-slate-500 font-sans uppercase font-semibold">Max Drawdown</div>
-                  <div className="font-bold text-sm text-rose-700 mt-0.5">
+                  <div className="font-bold text-sm text-emerald-950 mt-0.5">
                     {formatPercent(ew?.maxDrawdown ?? null)}
                   </div>
                 </div>
 
                 <div className="p-2 bg-white rounded border border-slate-200 col-span-2 sm:col-span-1">
                   <div className="text-[10px] text-slate-500 font-sans uppercase font-semibold">Sharpe (0% Rf)</div>
-                  <div className="font-bold text-sm text-indigo-700 mt-0.5">
+                  <div className="font-bold text-sm text-emerald-800 mt-0.5">
                     {formatNumber(ew?.sharpeRatio ?? null, 2)}
                   </div>
                 </div>
@@ -390,7 +390,7 @@ export const PortfolioReadiness: React.FC<PortfolioReadinessProps> = ({ dataMap 
                   <div className="text-[10px] text-slate-500 font-sans uppercase font-semibold">Cum. Return</div>
                   <div
                     className={`font-bold text-sm mt-0.5 ${
-                      (spy?.cumulativeReturn ?? 0) >= 0 ? 'text-emerald-700' : 'text-rose-700'
+                      (spy?.cumulativeReturn ?? 0) >= 0 ? 'text-emerald-700' : 'text-emerald-950'
                     }`}
                   >
                     {formatPercent(spy?.cumulativeReturn ?? null, true)}
@@ -401,7 +401,7 @@ export const PortfolioReadiness: React.FC<PortfolioReadinessProps> = ({ dataMap 
                   <div className="text-[10px] text-slate-500 font-sans uppercase font-semibold">Ann. Return</div>
                   <div
                     className={`font-bold text-sm mt-0.5 ${
-                      (spy?.annualizedReturn ?? 0) >= 0 ? 'text-emerald-700' : 'text-rose-700'
+                      (spy?.annualizedReturn ?? 0) >= 0 ? 'text-emerald-700' : 'text-emerald-950'
                     }`}
                   >
                     {formatPercent(spy?.annualizedReturn ?? null, true)}
@@ -417,7 +417,7 @@ export const PortfolioReadiness: React.FC<PortfolioReadinessProps> = ({ dataMap 
 
                 <div className="p-2 bg-slate-50 rounded border border-slate-200">
                   <div className="text-[10px] text-slate-500 font-sans uppercase font-semibold">Max Drawdown</div>
-                  <div className="font-bold text-sm text-rose-700 mt-0.5">
+                  <div className="font-bold text-sm text-emerald-950 mt-0.5">
                     {formatPercent(spy?.maxDrawdown ?? null)}
                   </div>
                 </div>
@@ -442,7 +442,7 @@ export const PortfolioReadiness: React.FC<PortfolioReadinessProps> = ({ dataMap 
               onClick={() => setActiveInspectorTab(activeInspectorTab === 'correlation' ? 'none' : 'correlation')}
               className={`px-3 py-1.5 rounded-lg border font-semibold transition-colors cursor-pointer ${
                 activeInspectorTab === 'correlation'
-                  ? 'bg-indigo-600 text-white border-indigo-700'
+                  ? 'bg-emerald-700 text-white border-emerald-800'
                   : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-100'
               }`}
             >
@@ -454,7 +454,7 @@ export const PortfolioReadiness: React.FC<PortfolioReadinessProps> = ({ dataMap 
               onClick={() => setActiveInspectorTab(activeInspectorTab === 'covariance' ? 'none' : 'covariance')}
               className={`px-3 py-1.5 rounded-lg border font-semibold transition-colors cursor-pointer ${
                 activeInspectorTab === 'covariance'
-                  ? 'bg-indigo-600 text-white border-indigo-700'
+                  ? 'bg-emerald-700 text-white border-emerald-800'
                   : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-100'
               }`}
             >
@@ -466,7 +466,7 @@ export const PortfolioReadiness: React.FC<PortfolioReadinessProps> = ({ dataMap 
               onClick={() => setActiveInspectorTab(activeInspectorTab === 'dates' ? 'none' : 'dates')}
               className={`px-3 py-1.5 rounded-lg border font-semibold transition-colors cursor-pointer ${
                 activeInspectorTab === 'dates'
-                  ? 'bg-indigo-600 text-white border-indigo-700'
+                  ? 'bg-emerald-700 text-white border-emerald-800'
                   : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-100'
               }`}
             >
@@ -574,7 +574,7 @@ export const PortfolioReadiness: React.FC<PortfolioReadinessProps> = ({ dataMap 
                           <td
                             key={colTicker}
                             className={`p-2 border border-slate-200 ${
-                              i === j ? 'bg-indigo-50 font-bold text-indigo-900' : 'text-slate-700'
+                              i === j ? 'bg-emerald-50 font-bold text-emerald-950' : 'text-slate-700'
                             }`}
                           >
                             {val.toFixed(4)}
@@ -625,7 +625,7 @@ export const PortfolioReadiness: React.FC<PortfolioReadinessProps> = ({ dataMap 
         {/* Footer Note */}
         <div className="p-3 bg-slate-50 text-xs text-slate-500 flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-1.5">
-            <Shield className="w-3.5 h-3.5 text-indigo-600" />
+            <Shield className="w-3.5 h-3.5 text-emerald-700" />
             <span>Strict Mathematical Reproducibility: Unbiased covariance, aligned date intersection, 0% risk-free rate assumption.</span>
           </div>
           <div className="font-mono text-slate-500">

@@ -106,7 +106,7 @@ export const PortfolioOverview: React.FC<PortfolioOverviewProps> = ({
         <div>
           <h2 id="overview-heading" className="text-lg font-bold text-slate-900 flex items-center gap-2">
             <span>Portfolio Overview &amp; Key Performance Indicators</span>
-            <span className="text-xs font-normal text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-200 font-mono">
+            <span className="text-xs font-normal text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded border border-emerald-300 font-mono">
               $1,000,000 Baseline Model
             </span>
           </h2>
@@ -132,7 +132,7 @@ export const PortfolioOverview: React.FC<PortfolioOverviewProps> = ({
             className={`inline-flex items-center gap-2 px-3.5 py-2 text-xs font-bold rounded-lg transition-all shadow-xs ${
               !hasTwelveDataKey || isRefreshingQuotes || !isDataLoaded
                 ? 'bg-slate-100 text-slate-400 border border-slate-200 cursor-not-allowed'
-                : 'bg-indigo-600 hover:bg-indigo-700 text-white cursor-pointer active:scale-98'
+                : 'bg-emerald-700 hover:bg-emerald-800 text-white cursor-pointer active:scale-98'
             }`}
           >
             <RefreshCw className={`w-3.5 h-3.5 ${isRefreshingQuotes ? 'animate-spin' : ''}`} />
@@ -156,7 +156,7 @@ export const PortfolioOverview: React.FC<PortfolioOverviewProps> = ({
             <span className="text-xs font-semibold uppercase tracking-wider text-slate-600">
               Simulated Portfolio Value
             </span>
-            <div className="p-2 bg-indigo-50 border border-indigo-100 rounded-lg text-indigo-700">
+            <div className="p-2 bg-emerald-100 border border-emerald-300 rounded-lg text-emerald-800">
               <DollarSign className="w-4 h-4" />
             </div>
           </div>
@@ -175,7 +175,7 @@ export const PortfolioOverview: React.FC<PortfolioOverviewProps> = ({
                     <span className="text-slate-400">Quote Intraday Mark:</span>
                     <span
                       className={`font-semibold ${
-                        markToMarketDelta >= 0 ? 'text-emerald-600' : 'text-rose-600'
+                        markToMarketDelta >= 0 ? 'text-emerald-700' : 'text-emerald-950'
                       }`}
                     >
                       {markToMarketDelta >= 0 ? '+' : ''}
@@ -206,7 +206,7 @@ export const PortfolioOverview: React.FC<PortfolioOverviewProps> = ({
             <span className="text-xs font-semibold uppercase tracking-wider text-slate-600">
               Optimized Holdings
             </span>
-            <div className="p-2 bg-indigo-50 border border-indigo-100 rounded-lg text-indigo-700">
+            <div className="p-2 bg-emerald-100 border border-emerald-300 rounded-lg text-emerald-800">
               <Layers className="w-4 h-4" />
             </div>
           </div>
@@ -250,14 +250,14 @@ export const PortfolioOverview: React.FC<PortfolioOverviewProps> = ({
             <span className="text-xs font-semibold uppercase tracking-wider text-slate-600">
               Annualized Volatility (&sigma;)
             </span>
-            <div className="p-2 bg-indigo-50 border border-indigo-100 rounded-lg text-indigo-700">
+            <div className="p-2 bg-emerald-100 border border-emerald-300 rounded-lg text-emerald-800">
               <Activity className="w-4 h-4" />
             </div>
           </div>
           <div>
             {isDataLoaded && optimizationResult.minVarianceVolatility !== null ? (
               <>
-                <div className="text-2xl font-bold font-mono text-indigo-950 flex items-center gap-1.5">
+                <div className="text-2xl font-bold font-mono text-emerald-950 flex items-center gap-1.5">
                   <span>{formatPercent(optimizationResult.minVarianceVolatility, 2)}</span>
                 </div>
                 <div className="mt-2 flex items-center justify-between text-xs text-slate-500 border-t border-slate-100 pt-2">
@@ -297,14 +297,14 @@ export const PortfolioOverview: React.FC<PortfolioOverviewProps> = ({
             <span className="text-xs font-semibold uppercase tracking-wider text-slate-600">
               Maximum Drawdown (MDD)
             </span>
-            <div className="p-2 bg-indigo-50 border border-indigo-100 rounded-lg text-indigo-700">
+            <div className="p-2 bg-emerald-100 border border-emerald-300 rounded-lg text-emerald-800">
               <TrendingDown className="w-4 h-4" />
             </div>
           </div>
           <div>
             {isDataLoaded && minVarPerf && minVarPerf.maxDrawdown !== null ? (
               <>
-                <div className="text-2xl font-bold font-mono text-rose-700">
+                <div className="text-2xl font-bold font-mono text-emerald-950">
                   {formatPercent(minVarPerf.maxDrawdown, 2)}
                 </div>
                 <div className="mt-2 flex items-center justify-between text-xs text-slate-500 border-t border-slate-100 pt-2">
@@ -339,7 +339,7 @@ export const PortfolioOverview: React.FC<PortfolioOverviewProps> = ({
         <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-xs flex flex-col justify-between">
           <div className="flex items-center justify-between border-b border-slate-100 pb-2.5 mb-2.5">
             <span className="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
-              <Scale className="w-3.5 h-3.5 text-indigo-600" />
+              <Scale className="w-3.5 h-3.5 text-emerald-700" />
               <span>Equal-Weight vs Min-Variance</span>
             </span>
             <span className="text-[10px] font-mono bg-slate-100 px-1.5 py-0.5 rounded text-slate-600">
@@ -352,7 +352,7 @@ export const PortfolioOverview: React.FC<PortfolioOverviewProps> = ({
               <div className="flex items-center justify-between">
                 <span className="text-slate-500">Cumulative Return:</span>
                 <div className="font-mono font-semibold text-slate-800">
-                  <span className="text-indigo-700 font-bold">{formatPercent(minVarPerf.cumulativeReturn)}</span>
+                  <span className="text-emerald-800 font-bold">{formatPercent(minVarPerf.cumulativeReturn)}</span>
                   <span className="text-slate-400 font-normal"> vs {formatPercent(ewPerf.cumulativeReturn)} (EW)</span>
                 </div>
               </div>
@@ -360,7 +360,7 @@ export const PortfolioOverview: React.FC<PortfolioOverviewProps> = ({
               <div className="flex items-center justify-between">
                 <span className="text-slate-500">Annualized CAGR:</span>
                 <div className="font-mono font-semibold text-slate-800">
-                  <span className="text-indigo-700 font-bold">{formatPercent(minVarPerf.annualizedReturn)}</span>
+                  <span className="text-emerald-800 font-bold">{formatPercent(minVarPerf.annualizedReturn)}</span>
                   <span className="text-slate-400 font-normal"> vs {formatPercent(ewPerf.annualizedReturn)} (EW)</span>
                 </div>
               </div>
@@ -368,7 +368,7 @@ export const PortfolioOverview: React.FC<PortfolioOverviewProps> = ({
               <div className="flex items-center justify-between">
                 <span className="text-slate-500">Sharpe Ratio (Rf=0%):</span>
                 <div className="font-mono font-semibold text-slate-800">
-                  <span className="text-indigo-700 font-bold">
+                  <span className="text-emerald-800 font-bold">
                     {minVarPerf.sharpeRatio !== null ? minVarPerf.sharpeRatio.toFixed(2) : '-'}
                   </span>
                   <span className="text-slate-400 font-normal">
@@ -434,7 +434,7 @@ export const PortfolioOverview: React.FC<PortfolioOverviewProps> = ({
         <div id="refresh-status-card" className="bg-white rounded-xl border border-slate-200 p-4 shadow-xs flex flex-col justify-between">
           <div className="flex items-center justify-between border-b border-slate-100 pb-2.5 mb-2.5">
             <span className="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
-              <Clock className="w-3.5 h-3.5 text-indigo-600" />
+              <Clock className="w-3.5 h-3.5 text-emerald-700" />
               <span>Data As-Of &amp; Feed Status</span>
             </span>
             <span className="text-[10px] font-mono text-slate-500">Dual-Stream Feed</span>

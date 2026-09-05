@@ -523,13 +523,15 @@ export function evaluatePortfolioReadiness(
   dataMap: SymbolDataMap
 ): PortfolioReadinessSummary {
   const totalCandidates = screeningItems.length;
-  const eligibleItems = screeningItems.filter((item) => item.eligibility === 'Eligible');
+  const eligibleItems = screeningItems.filter(
+    (item) => item.eligibility === 'Eligible' || item.eligibility === 'Fallback Included'
+  );
   const eligibleTickers = eligibleItems.map((item) => item.ticker);
   const eligibleCount = eligibleTickers.length;
 
-  const isEligibleBelowThreshold = eligibleCount < 10;
+  const isEligibleBelowThreshold = eligibleCount < 15;
   const fallbackNotice = isEligibleBelowThreshold
-    ? 'Fewer than 10 eligible holdings; optimization may use the highest-scoring data-sufficient fallback holdings in the next step.'
+    ? 'Fewer than 15 eligible holdings; fallback promotion logic active to maintain portfolio floor.'
     : undefined;
 
   // If no eligible stocks, return uninitialized/empty readiness summary

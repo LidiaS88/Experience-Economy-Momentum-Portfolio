@@ -90,9 +90,9 @@ export const OptimizedPortfolio: React.FC<OptimizedPortfolioProps> = ({
       case 'Constructive':
         return 'bg-emerald-100 text-emerald-800 border-emerald-300';
       case 'Mixed':
-        return 'bg-amber-100 text-amber-800 border-amber-300';
+        return 'bg-emerald-100 text-emerald-900 border-emerald-300';
       case 'Caution':
-        return 'bg-rose-100 text-rose-800 border-rose-300';
+        return 'bg-lime-100 text-lime-900 border-lime-300';
       default:
         return 'bg-slate-100 text-slate-700 border-slate-300';
     }
@@ -153,7 +153,7 @@ export const OptimizedPortfolio: React.FC<OptimizedPortfolioProps> = ({
         {/* Section Header */}
         <div className="p-5 border-b border-slate-200 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 bg-slate-50/75">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 bg-indigo-50 border border-indigo-200 rounded-xl text-indigo-700">
+            <div className="p-2.5 bg-emerald-100 border border-emerald-300 rounded-xl text-emerald-800">
               <PieChart className="w-5 h-5" />
             </div>
             <div>
@@ -161,7 +161,7 @@ export const OptimizedPortfolio: React.FC<OptimizedPortfolioProps> = ({
                 <h2 id="optimized-portfolio-heading" className="text-base sm:text-lg font-bold text-slate-900">
                   Constrained Minimum-Variance Optimized Portfolio
                 </h2>
-                <span className="text-xs font-bold px-2.5 py-0.5 bg-indigo-100 text-indigo-800 rounded-md border border-indigo-200">
+                <span className="text-xs font-bold px-2.5 py-0.5 bg-emerald-100 text-emerald-900 rounded-md border border-emerald-300">
                   $1,000,000 Capital Model
                 </span>
                 <span
@@ -169,7 +169,7 @@ export const OptimizedPortfolio: React.FC<OptimizedPortfolioProps> = ({
                     optimizationResult.status === 'Optimal'
                       ? 'bg-emerald-100 text-emerald-800 border-emerald-300'
                       : optimizationResult.status === 'Validation Fallback'
-                      ? 'bg-amber-100 text-amber-800 border-amber-300'
+                      ? 'bg-lime-100 text-lime-900 border-lime-300'
                       : 'bg-slate-100 text-slate-700 border-slate-300'
                   }`}
                 >
@@ -179,9 +179,15 @@ export const OptimizedPortfolio: React.FC<OptimizedPortfolioProps> = ({
                     ? 'Equal-Weight Fallback'
                     : optimizationResult.status}
                 </span>
+                <span
+                  id="optimizer-weight-range-badge"
+                  className="text-xs font-semibold px-2 py-0.5 rounded border bg-slate-100 text-slate-800 border-slate-300"
+                >
+                  2%–20% Weight Range
+                </span>
               </div>
               <p className="text-xs text-slate-500 mt-0.5">
-                Objective: <span className="font-mono font-semibold">min &frac12; wᵀ&Sigma;w</span> &bull; Box Constraints: <span className="font-mono font-semibold">0% &le; wᵢ &le; 20%</span> &bull; Budget: <span className="font-mono font-semibold">&sum;wᵢ = 1.0</span> &bull; Numerical: Projected Gradient Descent.
+                Objective: <span className="font-mono font-semibold">min &frac12; wᵀ&Sigma;w</span> &bull; Box Constraints: <span className="font-mono font-semibold">2% &le; wᵢ &le; 20%</span> &bull; Budget: <span className="font-mono font-semibold">&sum;wᵢ = 1.0</span> &bull; Numerical: Projected Gradient Descent.
               </p>
             </div>
           </div>
@@ -203,7 +209,7 @@ export const OptimizedPortfolio: React.FC<OptimizedPortfolioProps> = ({
               className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors border shadow-2xs ${
                 !hasTwelveDataKey || isRefreshingQuotes || !isDataAvailable
                   ? 'bg-slate-100 text-slate-400 border-slate-200 cursor-not-allowed'
-                  : 'bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border-indigo-200 cursor-pointer'
+                  : 'bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border-emerald-300 cursor-pointer'
               }`}
             >
               <RefreshCw className={`w-3.5 h-3.5 ${isRefreshingQuotes ? 'animate-spin' : ''}`} />
@@ -220,7 +226,7 @@ export const OptimizedPortfolio: React.FC<OptimizedPortfolioProps> = ({
               onClick={() => setShowMathDetails(!showMathDetails)}
               className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-700 bg-white hover:bg-slate-100 border border-slate-300 rounded-lg transition-colors cursor-pointer"
             >
-              <Info className="w-3.5 h-3.5 text-indigo-600" />
+              <Info className="w-3.5 h-3.5 text-emerald-700" />
               <span>{showMathDetails ? 'Hide Math Specs' : 'Inspect Optimizer Math'}</span>
             </button>
           </div>
@@ -230,31 +236,31 @@ export const OptimizedPortfolio: React.FC<OptimizedPortfolioProps> = ({
         {showMathDetails && (
           <div
             id="optimizer-math-specs-callout"
-            className="p-4 sm:p-5 bg-indigo-50/50 border-b border-indigo-100 text-xs text-slate-700"
+            className="p-4 sm:p-5 bg-emerald-50/50 border-b border-emerald-200 text-xs text-slate-700"
           >
             <div className="flex items-center gap-2 font-bold text-slate-900 mb-2">
-              <Shield className="w-4 h-4 text-indigo-600" />
+              <Shield className="w-4 h-4 text-emerald-700" />
               <span>Deterministic Numerical Optimizer: Projected Gradient Descent (PGD)</span>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
-              <div className="p-3 bg-white rounded-lg border border-indigo-200">
-                <div className="font-bold text-indigo-900 mb-1">1. Quadratic Objective &amp; Gradient</div>
+              <div className="p-3 bg-white rounded-lg border border-emerald-200">
+                <div className="font-bold text-emerald-950 mb-1">1. Quadratic Objective &amp; Gradient</div>
                 <p className="text-slate-600 text-[11px] leading-relaxed">
                   Objective <span className="font-mono font-semibold">f(w) = &frac12; wᵀ&Sigma;w</span> where &Sigma; is the annualized sample covariance matrix (&Sigma;<sub>daily</sub> &times; 252). Exact gradient is <span className="font-mono font-semibold">&nabla;f(w) = &Sigma;w</span>.
                 </p>
               </div>
 
-              <div className="p-3 bg-white rounded-lg border border-indigo-200">
-                <div className="font-bold text-indigo-900 mb-1">2. Exact Capped Simplex Projection</div>
+              <div className="p-3 bg-white rounded-lg border border-emerald-200">
+                <div className="font-bold text-emerald-950 mb-1">2. Exact Bounded Simplex Projection</div>
                 <p className="text-slate-600 text-[11px] leading-relaxed">
-                  Projects unconstrained step <span className="font-mono font-semibold">y = w - &alpha;&nabla;f</span> onto <span className="font-mono font-semibold">S = &#123;w | &sum;wᵢ = 1, 0 &le; wᵢ &le; 0.20&#125;</span> via exact root-finding on the Lagrange multiplier <span className="font-mono font-semibold">&lambda;*</span> with &lt; 10⁻¹⁵ tolerance.
+                  Projects unconstrained step <span className="font-mono font-semibold">y = w - &alpha;&nabla;f</span> onto <span className="font-mono font-semibold">S = &#123;w | &sum;wᵢ = 1, 0.02 &le; wᵢ &le; 0.20&#125;</span> via exact root-finding on the Lagrange multiplier <span className="font-mono font-semibold">&lambda;*</span> with &lt; 10⁻¹⁵ tolerance.
                 </p>
               </div>
 
-              <div className="p-3 bg-white rounded-lg border border-indigo-200">
-                <div className="font-bold text-indigo-900 mb-1">3. Step Size &amp; Validation Standard</div>
+              <div className="p-3 bg-white rounded-lg border border-emerald-200">
+                <div className="font-bold text-emerald-950 mb-1">3. Step Size &amp; Validation Standard</div>
                 <p className="text-slate-600 text-[11px] leading-relaxed">
-                  Armijo backtracking line search with initial <span className="font-mono font-semibold">w₀ = [1/N, ..., 1/N]ᵀ</span>. Post-optimization checks sum to 100%, non-negativity, and 20% cap. If validation fails, safely falls back to 1/N equal weights.
+                  Armijo backtracking line search with initial <span className="font-mono font-semibold">w₀ = [1/N, ..., 1/N]ᵀ</span>. Post-optimization checks sum to 100%, 2% floor, and 20% cap. If validation fails, safely falls back to 1/N equal weights.
                 </p>
               </div>
             </div>
@@ -265,17 +271,17 @@ export const OptimizedPortfolio: React.FC<OptimizedPortfolioProps> = ({
         {optimizationResult.isFallbackActive && (
           <div
             id="fallback-active-banner"
-            className="p-4 bg-amber-50 border-b border-amber-200 flex items-start gap-3 text-xs text-amber-900"
+            className="p-4 bg-lime-50/70 border-b border-lime-300 flex items-start gap-3 text-xs text-lime-950"
           >
-            <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+            <AlertTriangle className="w-5 h-5 text-lime-700 shrink-0 mt-0.5" />
             <div>
-              <div className="font-bold text-amber-950">
+              <div className="font-bold text-lime-950">
                 Fallback Inclusion Active ({optimizationResult.fallbackCount} fallback position
                 {optimizationResult.fallbackCount > 1 ? 's' : ''} added)
               </div>
-              <p className="mt-0.5 text-amber-800 leading-relaxed">
-                Fewer than 10 stocks passed the technical screening filter (Score &ge; 2). To maintain
-                institutional diversification standards and ensure a well-conditioned 10-holding covariance matrix,
+              <p className="mt-0.5 text-lime-900 leading-relaxed">
+                Fewer than 15 stocks passed the technical screening filter (Score &ge; 2). To maintain
+                institutional diversification standards and ensure a well-conditioned 15-holding covariance matrix,
                 the {optimizationResult.fallbackCount} highest-scoring data-sufficient candidate
                 {optimizationResult.fallbackCount > 1 ? 's' : ''} have been included and explicitly tagged as{' '}
                 <span className="font-semibold underline">"Fallback included"</span>.
@@ -288,19 +294,19 @@ export const OptimizedPortfolio: React.FC<OptimizedPortfolioProps> = ({
         {optimizationResult.status === 'Validation Fallback' && (
           <div
             id="validation-failure-warning"
-            className="p-4 bg-rose-50 border-b border-rose-200 flex items-start gap-3 text-xs text-rose-900"
+            className="p-4 bg-emerald-100/70 border-b border-emerald-300 flex items-start gap-3 text-xs text-emerald-950"
           >
-            <AlertCircle className="w-5 h-5 text-rose-600 shrink-0 mt-0.5" />
+            <AlertCircle className="w-5 h-5 text-emerald-800 shrink-0 mt-0.5" />
             <div>
-              <div className="font-bold text-rose-950">
+              <div className="font-bold text-emerald-950">
                 Optimization Post-Validation Warning: Equal-Weight Fallback Implemented
               </div>
-              <p className="mt-0.5 text-rose-800 leading-relaxed">
+              <p className="mt-0.5 text-emerald-900 leading-relaxed">
                 The numerical optimization output did not pass one or more post-optimization validation checks.
                 The system has safely reverted to a uniform 1/N Equal-Weight baseline across all {optimizationResult.includedCount} included holdings.
               </p>
               {validation.validationErrors.length > 0 && (
-                <ul className="mt-1.5 list-disc list-inside text-rose-800 space-y-0.5">
+                <ul className="mt-1.5 list-disc list-inside text-emerald-900 space-y-0.5">
                   {validation.validationErrors.map((err, i) => (
                     <li key={i}>{err}</li>
                   ))}
@@ -315,7 +321,7 @@ export const OptimizedPortfolio: React.FC<OptimizedPortfolioProps> = ({
         optimizationResult.status === 'No Data' ? (
           <div id="insufficient-data-stop-panel" className="p-8 sm:p-12 text-center bg-slate-50/50">
             <div className="max-w-md mx-auto flex flex-col items-center justify-center">
-              <div className="w-14 h-14 rounded-2xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-600 mb-3.5 shadow-2xs">
+              <div className="w-14 h-14 rounded-2xl bg-lime-50 border border-lime-300 flex items-center justify-center text-lime-700 mb-3.5 shadow-2xs">
                 <AlertTriangle className="w-7 h-7" />
               </div>
               <h3 className="text-base font-bold text-slate-900">
@@ -326,11 +332,11 @@ export const OptimizedPortfolio: React.FC<OptimizedPortfolioProps> = ({
               </p>
               <div className="mt-4 p-3 bg-white rounded-lg border border-slate-200 text-left text-xs text-slate-600 w-full space-y-1.5">
                 <div className="font-bold text-slate-800 flex items-center gap-1.5">
-                  <Shield className="w-3.5 h-3.5 text-indigo-600" />
+                  <Shield className="w-3.5 h-3.5 text-emerald-700" />
                   <span>Mathematical Pre-requisites for Optimization:</span>
                 </div>
                 <div className="text-[11px] text-slate-500 pl-4 space-y-0.5">
-                  <div>&bull; Minimum 10 assets with &ge; 252 valid daily price bars</div>
+                  <div>&bull; Minimum 15 assets with &ge; 252 valid daily price bars</div>
                   <div>&bull; Common overlapping trading date history</div>
                   <div>&bull; Symmetric covariance matrix with positive diagonal variance check</div>
                 </div>
@@ -346,13 +352,13 @@ export const OptimizedPortfolio: React.FC<OptimizedPortfolioProps> = ({
             <div id="optimizer-validation-panel" className="p-4 sm:p-5 bg-slate-50 border-b border-slate-200">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
-                  <Activity className="w-4 h-4 text-indigo-600" />
+                  <Activity className="w-4 h-4 text-emerald-700" />
                   <h3 className="text-xs sm:text-sm font-bold text-slate-900 uppercase tracking-wider">
                     Institutional Optimizer Validation &amp; Volatility Metrics
                   </h3>
                 </div>
                 <span className="text-[11px] text-slate-500 font-mono hidden sm:inline-block">
-                  Tolerance: &plusmn;0.01% | Max Cap: 20.00%
+                  Tolerance: &plusmn;0.01% | Weight Range: 2.00%–20.00%
                 </span>
               </div>
 
@@ -364,7 +370,7 @@ export const OptimizedPortfolio: React.FC<OptimizedPortfolioProps> = ({
                     {validation.isValid ? (
                       <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
                     ) : (
-                      <AlertTriangle className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                      <AlertTriangle className="w-3.5 h-3.5 text-lime-700 shrink-0" />
                     )}
                     <span className="truncate" title={optimizationResult.statusMessage}>
                       {optimizationResult.status === 'Optimal'
@@ -385,7 +391,7 @@ export const OptimizedPortfolio: React.FC<OptimizedPortfolioProps> = ({
                     <span className="text-xs font-normal text-slate-500">Holdings</span>
                   </div>
                   <div className="text-[10px] text-slate-400 mt-0.5">
-                    {optimizationResult.includedCount >= 10 ? 'Diversification &ge; 10 met' : 'Under target'}
+                    {optimizationResult.includedCount >= 15 ? 'Diversification &ge; 15 met' : 'Under target'}
                   </div>
                 </div>
 
@@ -401,22 +407,24 @@ export const OptimizedPortfolio: React.FC<OptimizedPortfolioProps> = ({
                   <div className="text-[10px] text-slate-400 mt-0.5">Target: 100.00% &plusmn; 0.01%</div>
                 </div>
 
-                {/* 4. Largest Weight (Cap <= 20%) */}
+                {/* 4. Weight Range (2% - 20%) */}
                 <div className="p-3 bg-white rounded-lg border border-slate-200">
-                  <div className="text-slate-500 text-[10px] uppercase font-semibold">Largest Weight</div>
+                  <div className="text-slate-500 text-[10px] uppercase font-semibold">Weight Range</div>
                   <div className="text-base sm:text-lg font-bold text-slate-900 mt-0.5 font-mono flex items-center gap-1">
-                    <span>{formatPercent(validation.largestWeight, 2)}</span>
-                    {validation.maxWeightConstraintPassed ? (
+                    <span>
+                      {formatPercent(validation.smallestWeight, 1)}–{formatPercent(validation.largestWeight, 1)}
+                    </span>
+                    {validation.maxWeightConstraintPassed && validation.minWeightConstraintPassed ? (
                       <span className="text-[10px] font-sans font-semibold text-emerald-700 bg-emerald-50 px-1 rounded">
-                        &le; 20%
+                        2%–20%
                       </span>
                     ) : (
-                      <span className="text-[10px] font-sans font-semibold text-rose-700 bg-rose-50 px-1 rounded">
-                        Cap Violated
+                      <span className="text-[10px] font-sans font-semibold text-emerald-950 bg-emerald-100 px-1 rounded">
+                        Violated
                       </span>
                     )}
                   </div>
-                  <div className="text-[10px] text-slate-400 mt-0.5">Box Cap: 20.00% Max</div>
+                  <div className="text-[10px] text-slate-400 mt-0.5">Box: 2.00% Min – 20.00% Max</div>
                 </div>
 
                 {/* 5. Fallback Holdings Count */}
@@ -434,11 +442,11 @@ export const OptimizedPortfolio: React.FC<OptimizedPortfolioProps> = ({
                 </div>
 
                 {/* 6. Min-Variance vs Equal-Weight Volatility */}
-                <div className="p-3 bg-indigo-50/60 rounded-lg border border-indigo-200">
-                  <div className="text-indigo-900 text-[10px] uppercase font-bold">Min-Var vs EW Vol</div>
-                  <div className="text-sm font-bold text-indigo-950 mt-0.5 font-mono flex items-center gap-1">
+                <div className="p-3 bg-emerald-50/60 rounded-lg border border-emerald-200">
+                  <div className="text-emerald-950 text-[10px] uppercase font-bold">Min-Var vs EW Vol</div>
+                  <div className="text-sm font-bold text-emerald-950 mt-0.5 font-mono flex items-center gap-1">
                     <span>{formatPercent(optimizationResult.minVarianceVolatility, 2)}</span>
-                    <span className="text-[10px] font-normal text-indigo-700">
+                    <span className="text-[10px] font-normal text-emerald-800">
                       vs {formatPercent(optimizationResult.equalWeightVolatility, 2)}
                     </span>
                   </div>
@@ -457,7 +465,7 @@ export const OptimizedPortfolio: React.FC<OptimizedPortfolioProps> = ({
               {/* Category Breakdown Chips */}
               <div className="mt-4 pt-3 border-t border-slate-200 flex flex-wrap items-center gap-2">
                 <span className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
-                  <Building className="w-3.5 h-3.5 text-indigo-600" />
+                  <Building className="w-3.5 h-3.5 text-emerald-700" />
                   <span>Category Exposures:</span>
                 </span>
                 {categoryBreakdown.map(([cat, data]) => (
@@ -466,7 +474,7 @@ export const OptimizedPortfolio: React.FC<OptimizedPortfolioProps> = ({
                     className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs bg-white border border-slate-200 text-slate-800 shadow-2xs font-mono"
                   >
                     <span className="font-sans font-semibold text-slate-700">{cat}:</span>
-                    <span className="font-bold text-indigo-700">{formatPercent(data.weight)}</span>
+                    <span className="font-bold text-emerald-800">{formatPercent(data.weight)}</span>
                     <span className="text-[10px] font-sans text-slate-400">({data.count} assets)</span>
                   </span>
                 ))}
@@ -483,7 +491,7 @@ export const OptimizedPortfolio: React.FC<OptimizedPortfolioProps> = ({
                     value={searchFilter}
                     onChange={(e) => setSearchFilter(e.target.value)}
                     placeholder="Search holdings by ticker, name, or sub-industry..."
-                    className="w-full pl-8 pr-3 py-1.5 text-xs bg-slate-50 border border-slate-300 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-indigo-500 focus:bg-white text-slate-900"
+                    className="w-full pl-8 pr-3 py-1.5 text-xs bg-slate-50 border border-slate-300 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-emerald-600 focus:bg-white text-slate-900"
                   />
                 </div>
               </div>
@@ -522,7 +530,7 @@ export const OptimizedPortfolio: React.FC<OptimizedPortfolioProps> = ({
                       setCategoryFilter('ALL');
                       setInclusionFilter('ALL');
                     }}
-                    className="text-xs text-indigo-600 hover:text-indigo-800 font-semibold px-2 py-1 cursor-pointer"
+                    className="text-xs text-emerald-700 hover:text-emerald-900 font-semibold px-2 py-1 cursor-pointer"
                   >
                     Reset Filters
                   </button>
@@ -561,7 +569,7 @@ export const OptimizedPortfolio: React.FC<OptimizedPortfolioProps> = ({
                         <tr
                           key={h.ticker}
                           className={`hover:bg-slate-50/80 transition-colors ${
-                            isFallback ? 'bg-amber-50/20' : ''
+                            isFallback ? 'bg-lime-50/20' : ''
                           }`}
                         >
                           {/* 1. Category */}
@@ -575,7 +583,7 @@ export const OptimizedPortfolio: React.FC<OptimizedPortfolioProps> = ({
                               <span>{h.ticker}</span>
                               {isFallback && (
                                 <span
-                                  className="w-2 h-2 rounded-full bg-amber-500"
+                                  className="w-2 h-2 rounded-full bg-lime-500"
                                   title="Fallback Included Asset"
                                 />
                               )}
@@ -595,8 +603,8 @@ export const OptimizedPortfolio: React.FC<OptimizedPortfolioProps> = ({
                           {/* 4. Inclusion Reason */}
                           <td className="py-3 px-4 whitespace-nowrap">
                             {isFallback ? (
-                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-semibold bg-amber-100 text-amber-900 border border-amber-300">
-                                <AlertTriangle className="w-3 h-3 text-amber-600" />
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-semibold bg-lime-100 text-lime-950 border border-lime-300">
+                                <AlertTriangle className="w-3 h-3 text-lime-700" />
                                 <span>Fallback included</span>
                               </span>
                             ) : (
@@ -616,12 +624,12 @@ export const OptimizedPortfolio: React.FC<OptimizedPortfolioProps> = ({
 
                           {/* 6. Optimized Weight */}
                           <td className="py-3 px-4 text-right font-mono whitespace-nowrap">
-                            <div className="font-bold text-sm text-indigo-900">
+                            <div className="font-bold text-sm text-emerald-950">
                               {formatPercent(h.weight, 2)}
                             </div>
                             <div className="w-16 ml-auto bg-slate-100 rounded-full h-1.5 overflow-hidden mt-1">
                               <div
-                                className="bg-indigo-600 h-full rounded-full"
+                                className="bg-emerald-600 h-full rounded-full"
                                 style={{ width: `${Math.min(100, (h.weight / MAX_WEIGHT_CONSTRAINT) * 100)}%` }}
                               />
                             </div>
@@ -645,7 +653,7 @@ export const OptimizedPortfolio: React.FC<OptimizedPortfolioProps> = ({
                             {hasFreshQuote && quote.percentChange !== null && (
                               <div
                                 className={`text-[10px] font-semibold ${
-                                  quote.percentChange >= 0 ? 'text-emerald-600' : 'text-rose-600'
+                                  quote.percentChange >= 0 ? 'text-emerald-600' : 'text-emerald-800'
                                 }`}
                               >
                                 {quote.percentChange >= 0 ? '+' : ''}
@@ -681,10 +689,10 @@ export const OptimizedPortfolio: React.FC<OptimizedPortfolioProps> = ({
                               </div>
                             ) : isQuoteError ? (
                               <span
-                                className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-semibold bg-rose-50 text-rose-700 border border-rose-200"
+                                className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-100 text-emerald-950 border border-emerald-300"
                                 title={quote.errorMessage || 'Quote failed'}
                               >
-                                <AlertCircle className="w-3 h-3 text-rose-500" />
+                                <AlertCircle className="w-3 h-3 text-emerald-800" />
                                 <span>Quote Error</span>
                               </span>
                             ) : (
@@ -722,7 +730,7 @@ export const OptimizedPortfolio: React.FC<OptimizedPortfolioProps> = ({
                     <td colSpan={5} className="py-3 px-4 text-left">
                       Portfolio Totals ({optimizationResult.includedCount} Active Positions)
                     </td>
-                    <td className="py-3 px-4 text-right font-mono text-indigo-950 text-sm">
+                    <td className="py-3 px-4 text-right font-mono text-emerald-950 text-sm">
                       {formatPercent(totalDisplayWeight, 2)}
                     </td>
                     <td className="py-3 px-4 text-right font-mono text-slate-950 text-sm">
@@ -739,7 +747,7 @@ export const OptimizedPortfolio: React.FC<OptimizedPortfolioProps> = ({
             {/* Table Bottom Status Bar */}
             <div className="p-3 bg-slate-50 border-t border-slate-200 text-xs text-slate-500 flex flex-wrap items-center justify-between gap-2">
               <div className="flex items-center gap-2">
-                <Shield className="w-3.5 h-3.5 text-indigo-600" />
+                <Shield className="w-3.5 h-3.5 text-emerald-700" />
                 <span>Deterministic Convex Quadratic Programming (Long-Only Capped Min-Variance).</span>
               </div>
               <div className="font-mono text-slate-500">

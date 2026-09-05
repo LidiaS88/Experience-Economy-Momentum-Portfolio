@@ -505,13 +505,99 @@ export function screenCandidate(
   };
 }
 
+export const MIN_ELIGIBLE_FLOOR = 15;
+
 /**
  * Screens all 20 configured portfolio universe stocks using the current in-memory symbol data map.
+ * 
+ * Qualification and 15-stock floor logic:
+ * 1. Base technical screen marks stock "Eligible" at score >= 2 out of 4 (rules: close > SMA200, SMA50 > SMA200, MACD > signal, RSI14 between 45–70).
+ * 2. 15-Stock Floor & Fallback Promotion:
+ *    If fewer than 15 stocks are eligible at score >= 2:
+ *    - First try relaxing the threshold to score >= 1.
+ *    - If that still doesn't reach 15, promote the highest-ranked remaining data-sufficient stocks
+ *      (rank by: technical score descending, then 60-day return descending, then annualized volatility ascending, then ticker alphabetically)
+ *      until exactly 15 are included.
+ *    - Any stock added this way receives eligibility: 'Fallback Included' (distinct from normally-qualified 'Eligible').
+ *    - Remaining data-sufficient stocks receive eligibility: 'Ineligible'.
+ *    - Insufficient data stocks remain 'Data unavailable'.
  */
 export function screenAllCandidates(dataMap: SymbolDataMap): CandidateScreeningItem[] {
-  return PORTFOLIO_UNIVERSE.map((candidate) => {
+  const initialItems = PORTFOLIO_UNIVERSE.map((candidate) => {
     const record = dataMap[candidate.ticker];
     const data = record ? record.data : [];
     return screenCandidate(candidate.ticker, candidate.company, candidate.category, data);
+  });
+
+  const dataSufficient = initialItems.filter((item) => item.hasSufficientData);
+
+  // If no data is loaded yet, return initial pending states
+  if (dataSufficient.length === 0) {
+    return initialItems;
+  }
+
+  // Comparator for ranking candidates:
+  // 1. Technical score descending
+  // 2. 60-day return descending
+  // 3. Annualized volatility ascending
+  // 4. Ticker alphabetically ascending
+  const compareRank = (a: CandidateScreeningItem, b: CandidateScreeningItem) => {
+    const scoreA = a.technicalScore ?? -1;
+    const scoreB = b.technicalScore ?? -1;
+    if (scoreB !== scoreA) return scoreB - scoreA;
+
+    const retA = a.trailing60Return ?? -Infinity;
+    const retB = b.trailing60Return ?? -Infinity;
+    if (Math.abs(retB - retA) > 1e-9) return retB - retA;
+
+    const volA = a.annualizedVolatility ?? Infinity;
+    const volB = b.annualizedVolatility ?? Infinity;
+    if (Math.abs(volA - volB) > 1e-9) return volA - volB;
+
+    return a.ticker.localeCompare(b.ticker);
+  };
+
+  const normallyEligible = dataSufficient.filter((item) => (item.technicalScore ?? 0) >= 2);
+  const targetCount = Math.min(MIN_ELIGIBLE_FLOOR, dataSufficient.length);
+
+  const normallyEligibleSet = new Set<string>();
+  const fallbackSet = new Set<string>();
+
+  if (normallyEligible.length >= targetCount) {
+    for (const item of normallyEligible) {
+      normallyEligibleSet.add(item.ticker);
+    }
+  } else {
+    // Fewer than 15 stocks eligible at score >= 2
+    for (const item of normallyEligible) {
+      normallyEligibleSet.add(item.ticker);
+    }
+
+    const needed = targetCount - normallyEligibleSet.size;
+
+    // Remaining data-sufficient candidates (score < 2)
+    // Sorted by: technical score desc (score 1 before score 0),
+    // then 60-day return desc, then annualized vol asc, then ticker asc.
+    const remainingCandidates = dataSufficient
+      .filter((item) => !normallyEligibleSet.has(item.ticker))
+      .sort(compareRank);
+
+    // Promote until exactly targetCount (15) are included
+    for (let i = 0; i < needed && i < remainingCandidates.length; i++) {
+      fallbackSet.add(remainingCandidates[i].ticker);
+    }
+  }
+
+  return initialItems.map((item) => {
+    if (!item.hasSufficientData) {
+      return item;
+    }
+    if (normallyEligibleSet.has(item.ticker)) {
+      return { ...item, eligibility: 'Eligible' as const };
+    }
+    if (fallbackSet.has(item.ticker)) {
+      return { ...item, eligibility: 'Fallback Included' as const };
+    }
+    return { ...item, eligibility: 'Ineligible' as const };
   });
 }

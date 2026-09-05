@@ -23,7 +23,7 @@ export const MethodologySection: React.FC = () => {
           {/* Pillar 1: Investment Thesis */}
           <div id="methodology-pillar-thesis" className="p-4 rounded-lg bg-slate-50 border border-slate-200">
             <div className="flex items-center gap-2 font-semibold text-sm text-slate-900 mb-2">
-              <div className="p-1.5 bg-blue-100 text-blue-800 rounded">
+              <div className="p-1.5 bg-emerald-100 text-emerald-800 rounded">
                 <Target className="w-4 h-4" />
               </div>
               <h3>1. The Investment Thesis</h3>
@@ -65,7 +65,7 @@ export const MethodologySection: React.FC = () => {
           {/* Pillar 3: Minimum-Variance Optimization */}
           <div id="methodology-pillar-optimization" className="p-4 rounded-lg bg-slate-50 border border-slate-200">
             <div className="flex items-center gap-2 font-semibold text-sm text-slate-900 mb-2">
-              <div className="p-1.5 bg-indigo-100 text-indigo-800 rounded">
+              <div className="p-1.5 bg-emerald-100 text-emerald-800 rounded">
                 <Scale className="w-4 h-4" />
               </div>
               <h3>3. Minimum-Variance Optimization &amp; Covariance</h3>
@@ -84,7 +84,7 @@ export const MethodologySection: React.FC = () => {
           {/* Pillar 4: Key Risks & Limitations */}
           <div id="methodology-pillar-risks" className="p-4 rounded-lg bg-slate-50 border border-slate-200">
             <div className="flex items-center gap-2 font-semibold text-sm text-slate-900 mb-2">
-              <div className="p-1.5 bg-rose-100 text-rose-800 rounded">
+              <div className="p-1.5 bg-lime-100 text-lime-900 rounded">
                 <AlertTriangle className="w-4 h-4" />
               </div>
               <h3>4. Key Risks &amp; Model Limitations</h3>

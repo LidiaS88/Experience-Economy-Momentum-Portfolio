@@ -44,17 +44,17 @@ interface PortfolioAnalyticsProps {
 }
 
 const CATEGORY_COLORS: Record<string, string> = {
-  'Live Events': '#6366f1', // Indigo
-  'Travel': '#0ea5e9',      // Sky
-  'Wellness': '#10b981',    // Emerald
-  'Streaming': '#8b5cf6',   // Violet
-  'Dining': '#f59e0b',      // Amber
+  'Live Events': '#047857', // Deep Emerald
+  'Travel': '#10b981',      // Vivid Emerald
+  'Wellness': '#34d399',    // Mint Green
+  'Streaming': '#065f46',   // Forest Green
+  'Dining': '#84cc16',      // Olive / Lime Green
 };
 
 const SIGNAL_COLORS = {
-  'Constructive': '#10b981', // Emerald
-  'Mixed': '#f59e0b',        // Amber
-  'Caution': '#f43f5e',      // Rose
+  'Constructive': '#10b981', // Vivid Emerald
+  'Mixed': '#84cc16',        // Lime/Sage Green
+  'Caution': '#064e3b',      // Deep Forest Pine
 };
 
 export const PortfolioAnalytics: React.FC<PortfolioAnalyticsProps> = ({
@@ -124,17 +124,17 @@ export const PortfolioAnalytics: React.FC<PortfolioAnalyticsProps> = ({
 
   // 3. Correlation Heatmap Color Calculator
   const getCorrelationColor = (val: number) => {
-    if (isNaN(val)) return 'bg-slate-100 text-slate-400';
-    if (val === 1.0) return 'bg-indigo-600 text-white font-bold';
+    if (isNaN(val)) return 'bg-emerald-50 text-emerald-600';
+    if (val === 1.0) return 'bg-emerald-800 text-white font-bold';
 
-    if (val >= 0.7) return 'bg-indigo-500/80 text-white font-semibold';
-    if (val >= 0.5) return 'bg-indigo-400/60 text-indigo-950 font-semibold';
-    if (val >= 0.3) return 'bg-indigo-300/50 text-indigo-900';
-    if (val >= 0.1) return 'bg-indigo-100 text-indigo-800';
-    if (val >= -0.1) return 'bg-slate-100 text-slate-700';
-    if (val >= -0.3) return 'bg-emerald-100 text-emerald-800';
-    if (val >= -0.5) return 'bg-emerald-200/60 text-emerald-900 font-semibold';
-    return 'bg-emerald-400/80 text-white font-bold';
+    if (val >= 0.7) return 'bg-emerald-700 text-white font-semibold';
+    if (val >= 0.5) return 'bg-emerald-600 text-white font-semibold';
+    if (val >= 0.3) return 'bg-emerald-400 text-emerald-950 font-medium';
+    if (val >= 0.1) return 'bg-emerald-200 text-emerald-950';
+    if (val >= -0.1) return 'bg-emerald-100 text-emerald-900';
+    if (val >= -0.3) return 'bg-emerald-50 text-emerald-800';
+    if (val >= -0.5) return 'bg-[#d1fae5] text-emerald-900 font-semibold';
+    return 'bg-emerald-300 text-emerald-950 font-bold';
   };
 
   const corrMatrixResult = optimizationResult.correlationMatrix;
@@ -163,7 +163,7 @@ export const PortfolioAnalytics: React.FC<PortfolioAnalyticsProps> = ({
               <LineChartIcon className="w-6 h-6" />
             </div>
             <div className="font-bold text-slate-800 text-sm flex items-center gap-1.5">
-              <AlertCircle className="w-4 h-4 text-amber-500" />
+              <AlertCircle className="w-4 h-4 text-lime-600" />
               <span>Historical Time Series Not Ingested</span>
             </div>
             <p className="text-xs text-slate-500 mt-1 leading-relaxed">
@@ -182,7 +182,7 @@ export const PortfolioAnalytics: React.FC<PortfolioAnalyticsProps> = ({
               <div>
                 <h3 className="font-bold text-sm text-slate-900 flex items-center gap-2">
                   <span>Cumulative Indexed Portfolio Performance (Base = 100.00)</span>
-                  <span className="text-xs font-normal text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-200 font-mono">
+                  <span className="text-xs font-normal text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded border border-emerald-300 font-mono">
                     Common Evaluation Window
                   </span>
                 </h3>
@@ -193,15 +193,15 @@ export const PortfolioAnalytics: React.FC<PortfolioAnalyticsProps> = ({
 
               <div className="flex items-center gap-3 text-xs">
                 <span className="inline-flex items-center gap-1 text-slate-700 font-medium">
-                  <span className="w-3 h-0.5 bg-indigo-600 inline-block rounded" />
+                  <span className="w-3 h-0.5 bg-emerald-800 inline-block rounded" />
                   <span>Min-Variance</span>
                 </span>
                 <span className="inline-flex items-center gap-1 text-slate-700 font-medium">
-                  <span className="w-3 h-0.5 bg-amber-500 inline-block rounded" />
+                  <span className="w-3 h-0.5 bg-emerald-500 inline-block rounded" />
                   <span>Equal-Weight</span>
                 </span>
                 <span className="inline-flex items-center gap-1 text-slate-700 font-medium">
-                  <span className="w-3 h-0.5 bg-emerald-600 inline-block rounded" />
+                  <span className="w-3 h-0.5 bg-lime-600 inline-block rounded" />
                   <span>SPY S&amp;P 500</span>
                 </span>
               </div>
@@ -214,10 +214,10 @@ export const PortfolioAnalytics: React.FC<PortfolioAnalyticsProps> = ({
                   data={optimizationResult.cumulativeSeries}
                   margin={{ top: 10, right: 20, left: 0, bottom: 0 }}
                 >
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#d4eedd" />
                   <XAxis
                     dataKey="date"
-                    tick={{ fontSize: 10, fill: '#64748b' }}
+                    tick={{ fontSize: 10, fill: '#226238' }}
                     tickFormatter={(val) => {
                       if (!val) return '';
                       const parts = val.split('-');
@@ -227,7 +227,7 @@ export const PortfolioAnalytics: React.FC<PortfolioAnalyticsProps> = ({
                   />
                   <YAxis
                     domain={['auto', 'auto']}
-                    tick={{ fontSize: 10, fill: '#64748b' }}
+                    tick={{ fontSize: 10, fill: '#226238' }}
                     tickFormatter={(val) => `${val.toFixed(0)}`}
                   />
                   <Tooltip
@@ -235,21 +235,21 @@ export const PortfolioAnalytics: React.FC<PortfolioAnalyticsProps> = ({
                       if (active && payload && payload.length) {
                         const data = payload[0].payload;
                         return (
-                          <div className="bg-slate-900 text-white p-3 rounded-lg shadow-lg border border-slate-800 text-xs font-mono">
-                            <div className="font-sans font-bold text-slate-200 border-b border-slate-700 pb-1 mb-1.5">
+                          <div className="bg-emerald-950 text-white p-3 rounded-lg shadow-lg border border-emerald-800 text-xs font-mono">
+                            <div className="font-sans font-bold text-emerald-200 border-b border-emerald-800 pb-1 mb-1.5">
                               Trading Date: {label}
                             </div>
                             <div className="space-y-1">
-                              <div className="flex items-center justify-between gap-4 text-indigo-300">
+                              <div className="flex items-center justify-between gap-4 text-emerald-300">
                                 <span>Min-Variance Index:</span>
                                 <span className="font-bold">{data.minVarIndex.toFixed(2)}</span>
                               </div>
-                              <div className="flex items-center justify-between gap-4 text-amber-300">
+                              <div className="flex items-center justify-between gap-4 text-emerald-400">
                                 <span>Equal-Weight Index:</span>
                                 <span className="font-bold">{data.equalWeightIndex.toFixed(2)}</span>
                               </div>
                               {data.spyIndex !== null && (
-                                <div className="flex items-center justify-between gap-4 text-emerald-300">
+                                <div className="flex items-center justify-between gap-4 text-lime-300">
                                   <span>SPY Benchmark Index:</span>
                                   <span className="font-bold">{data.spyIndex.toFixed(2)}</span>
                                 </div>
@@ -265,7 +265,7 @@ export const PortfolioAnalytics: React.FC<PortfolioAnalyticsProps> = ({
                     type="monotone"
                     dataKey="minVarIndex"
                     name="Min-Variance Portfolio"
-                    stroke="#4f46e5"
+                    stroke="#065f46"
                     strokeWidth={2.5}
                     dot={false}
                     activeDot={{ r: 5 }}
@@ -274,7 +274,7 @@ export const PortfolioAnalytics: React.FC<PortfolioAnalyticsProps> = ({
                     type="monotone"
                     dataKey="equalWeightIndex"
                     name="Equal-Weight Portfolio"
-                    stroke="#f59e0b"
+                    stroke="#10b981"
                     strokeWidth={1.75}
                     strokeDasharray="4 2"
                     dot={false}
@@ -285,7 +285,7 @@ export const PortfolioAnalytics: React.FC<PortfolioAnalyticsProps> = ({
                       type="monotone"
                       dataKey="spyIndex"
                       name="SPY Benchmark"
-                      stroke="#10b981"
+                      stroke="#84cc16"
                       strokeWidth={1.75}
                       dot={false}
                       activeDot={{ r: 4 }}
@@ -301,7 +301,7 @@ export const PortfolioAnalytics: React.FC<PortfolioAnalyticsProps> = ({
                 <span className="text-slate-500 block text-[10px] uppercase font-semibold">
                   Min-Var Cumulative
                 </span>
-                <span className="font-bold text-indigo-900 text-sm font-mono">
+                <span className="font-bold text-emerald-950 text-sm font-mono">
                   {optimizationResult.minVarPerformance?.cumulativeReturn !== null
                     ? `${(optimizationResult.minVarPerformance!.cumulativeReturn! * 100).toFixed(2)}%`
                     : '-'}
@@ -312,7 +312,7 @@ export const PortfolioAnalytics: React.FC<PortfolioAnalyticsProps> = ({
                 <span className="text-slate-500 block text-[10px] uppercase font-semibold">
                   Min-Var Sharpe (Rf=0%)
                 </span>
-                <span className="font-bold text-indigo-900 text-sm font-mono">
+                <span className="font-bold text-emerald-950 text-sm font-mono">
                   {optimizationResult.minVarPerformance?.sharpeRatio !== null
                     ? optimizationResult.minVarPerformance!.sharpeRatio!.toFixed(2)
                     : '-'}
@@ -323,7 +323,7 @@ export const PortfolioAnalytics: React.FC<PortfolioAnalyticsProps> = ({
                 <span className="text-slate-500 block text-[10px] uppercase font-semibold">
                   Min-Var Max Drawdown
                 </span>
-                <span className="font-bold text-rose-700 text-sm font-mono">
+                <span className="font-bold text-emerald-800 text-sm font-mono">
                   {optimizationResult.minVarPerformance?.maxDrawdown !== null
                     ? `${(optimizationResult.minVarPerformance!.maxDrawdown! * 100).toFixed(2)}%`
                     : '-'}
@@ -397,7 +397,7 @@ export const PortfolioAnalytics: React.FC<PortfolioAnalyticsProps> = ({
                             <div className="bg-slate-900 text-white p-2.5 rounded-lg shadow-lg border border-slate-800 text-xs font-mono">
                               <div className="font-sans font-bold text-slate-200">{d.ticker} - {d.company}</div>
                               <div className="text-[11px] text-slate-400 font-sans">{d.category}</div>
-                              <div className="mt-1 pt-1 border-t border-slate-700 flex justify-between gap-3 text-indigo-300">
+                              <div className="mt-1 pt-1 border-t border-slate-700 flex justify-between gap-3 text-emerald-300">
                                 <span>Weight:</span>
                                 <span className="font-bold">{d.weight}%</span>
                               </div>
@@ -446,7 +446,7 @@ export const PortfolioAnalytics: React.FC<PortfolioAnalyticsProps> = ({
                   </h3>
                   <p className="text-xs text-slate-500">Momentum &amp; trend alignment across portfolio</p>
                 </div>
-                <PieIcon className="w-4 h-4 text-indigo-600" />
+                <PieIcon className="w-4 h-4 text-emerald-700" />
               </div>
 
               <div className="h-[180px] w-full flex items-center justify-center">
@@ -509,7 +509,7 @@ export const PortfolioAnalytics: React.FC<PortfolioAnalyticsProps> = ({
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-slate-100 pb-3 mb-4">
                 <div>
                   <h3 className="font-bold text-sm text-slate-900 flex items-center gap-2">
-                    <Grid className="w-4 h-4 text-indigo-600" />
+                    <Grid className="w-4 h-4 text-emerald-700" />
                     <span>Asset Correlation Matrix &amp; Diversification Heatmap</span>
                   </h3>
                   <p className="text-xs text-slate-500">
@@ -522,10 +522,10 @@ export const PortfolioAnalytics: React.FC<PortfolioAnalyticsProps> = ({
                   <span className="px-1.5 py-0.5 rounded bg-emerald-300 text-emerald-950 text-[10px] font-bold">
                     &le; 0.0 (High Diversification)
                   </span>
-                  <span className="px-1.5 py-0.5 rounded bg-indigo-100 text-indigo-900 text-[10px]">
+                  <span className="px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-900 text-[10px] border border-emerald-300">
                     0.1 - 0.4 (Moderate)
                   </span>
-                  <span className="px-1.5 py-0.5 rounded bg-indigo-600 text-white text-[10px] font-bold">
+                  <span className="px-1.5 py-0.5 rounded bg-emerald-700 text-white text-[10px] font-bold">
                     &ge; 0.7 (Strong)
                   </span>
                 </div>
@@ -569,7 +569,7 @@ export const PortfolioAnalytics: React.FC<PortfolioAnalyticsProps> = ({
                                   value: val,
                                 })
                               }
-                              className={`p-1.5 border border-slate-200 cursor-pointer transition-all hover:ring-2 hover:ring-indigo-500 hover:z-10 ${getCorrelationColor(
+                              className={`p-1.5 border border-slate-200 cursor-pointer transition-all hover:ring-2 hover:ring-emerald-600 hover:z-10 ${getCorrelationColor(
                                 val
                               )}`}
                               title={`${rowTicker} vs ${colTicker}: ${val.toFixed(3)}`}
@@ -586,14 +586,14 @@ export const PortfolioAnalytics: React.FC<PortfolioAnalyticsProps> = ({
 
               {/* Selected Pair Detail Card */}
               {selectedCorrelationPair && (
-                <div className="mt-4 p-3 bg-indigo-50/70 border border-indigo-200 rounded-lg flex items-center justify-between text-xs">
+                <div className="mt-4 p-3 bg-emerald-100/70 border border-emerald-300 rounded-lg flex items-center justify-between text-xs">
                   <div className="flex items-center gap-2">
-                    <Info className="w-4 h-4 text-indigo-600" />
-                    <span className="font-semibold text-indigo-950">
+                    <Info className="w-4 h-4 text-emerald-700" />
+                    <span className="font-semibold text-emerald-950">
                       Selected Pair Correlation: {selectedCorrelationPair.tickerA} &harr; {selectedCorrelationPair.tickerB}
                     </span>
                   </div>
-                  <div className="font-mono font-bold text-indigo-900 text-sm">
+                  <div className="font-mono font-bold text-emerald-900 text-sm">
                     {selectedCorrelationPair.value.toFixed(4)}
                   </div>
                 </div>

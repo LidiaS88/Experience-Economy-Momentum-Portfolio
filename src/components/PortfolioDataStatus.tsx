@@ -77,22 +77,22 @@ export const PortfolioDataStatus: React.FC<PortfolioDataStatusProps> = ({
         );
       case 'loading':
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-blue-50 text-blue-700 border border-blue-200 animate-pulse">
-            <Loader2 className="w-3 h-3 animate-spin text-blue-600" />
+          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-100 text-emerald-800 border border-emerald-300 animate-pulse">
+            <Loader2 className="w-3 h-3 animate-spin text-emerald-700" />
             <span>Loading</span>
           </span>
         );
       case 'insufficient-data':
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-amber-50 text-amber-700 border border-amber-200" title="Fewer than 252 valid daily bars">
-            <AlertTriangle className="w-3 h-3 text-amber-600" />
+          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-lime-100 text-lime-900 border border-lime-300" title="Fewer than 252 valid daily bars">
+            <AlertTriangle className="w-3 h-3 text-lime-700" />
             <span>Insufficient data</span>
           </span>
         );
       case 'failed':
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-rose-50 text-rose-700 border border-rose-200">
-            <AlertCircle className="w-3 h-3 text-rose-600" />
+          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-100/90 text-emerald-950 border border-emerald-400">
+            <AlertCircle className="w-3 h-3 text-emerald-800" />
             <span>Failed</span>
           </span>
         );
@@ -113,7 +113,7 @@ export const PortfolioDataStatus: React.FC<PortfolioDataStatusProps> = ({
       <div className="p-5 border-b border-slate-200 bg-slate-50/75 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <div className="p-2 bg-blue-50 border border-blue-200 rounded-lg text-blue-700">
+            <div className="p-2 bg-emerald-100 border border-emerald-300 rounded-lg text-emerald-800">
               <Database className="w-5 h-5" />
             </div>
             <div>
@@ -121,7 +121,7 @@ export const PortfolioDataStatus: React.FC<PortfolioDataStatusProps> = ({
                 <h2 id="portfolio-data-heading" className="text-base sm:text-lg font-bold text-slate-900">
                   Portfolio Historical Data Engine
                 </h2>
-                <span className="text-[11px] font-semibold px-2 py-0.5 bg-blue-50 text-blue-700 rounded border border-blue-200 flex items-center gap-1">
+                <span className="text-[11px] font-semibold px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded border border-emerald-300 flex items-center gap-1">
                   <Layers className="w-3 h-3" />
                   <span>20 Stocks + SPY</span>
                 </span>
@@ -138,9 +138,9 @@ export const PortfolioDataStatus: React.FC<PortfolioDataStatusProps> = ({
           {progressText && (
             <div
               id="portfolio-load-progress-indicator"
-              className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-blue-50 border border-blue-200 text-blue-800 flex items-center gap-2"
+              className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-emerald-100 border border-emerald-300 text-emerald-900 flex items-center gap-2"
             >
-              {isLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin text-blue-600" /> : <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />}
+              {isLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin text-emerald-700" /> : <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />}
               <span>{progressText}</span>
             </div>
           )}
@@ -152,7 +152,7 @@ export const PortfolioDataStatus: React.FC<PortfolioDataStatusProps> = ({
               type="button"
               onClick={onRetryFailedData}
               disabled={isLoading || !hasTwelveDataKey}
-              className="inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs sm:text-sm font-semibold text-amber-800 bg-amber-100 hover:bg-amber-200 active:bg-amber-300 border border-amber-300 rounded-lg transition-colors cursor-pointer shadow-xs disabled:opacity-50 disabled:cursor-not-allowed"
+              className="inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs sm:text-sm font-semibold text-emerald-950 bg-emerald-200 hover:bg-emerald-300 active:bg-emerald-400 border border-emerald-400 rounded-lg transition-colors cursor-pointer shadow-xs disabled:opacity-50 disabled:cursor-not-allowed"
               title={`Retry only the ${retryableCount} failed or insufficient-data symbols without re-fetching already successful data`}
             >
               <RotateCcw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin' : ''}`} />
@@ -165,7 +165,7 @@ export const PortfolioDataStatus: React.FC<PortfolioDataStatusProps> = ({
             type="button"
             onClick={onLoadData}
             disabled={isLoading || !hasTwelveDataKey}
-            className="inline-flex items-center justify-center gap-2 px-4 py-2 text-xs sm:text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 active:bg-blue-800 rounded-lg transition-colors cursor-pointer shadow-xs disabled:opacity-50 disabled:cursor-not-allowed"
+            className="inline-flex items-center justify-center gap-2 px-4 py-2 text-xs sm:text-sm font-semibold text-white bg-emerald-700 hover:bg-emerald-800 active:bg-emerald-900 rounded-lg transition-colors cursor-pointer shadow-xs disabled:opacity-50 disabled:cursor-not-allowed"
             title={
               !hasTwelveDataKey
                 ? 'Twelve Data API key required. Enter key in Data Access panel above.'
@@ -197,17 +197,17 @@ export const PortfolioDataStatus: React.FC<PortfolioDataStatusProps> = ({
           <div className="text-emerald-700 text-[10px] uppercase font-semibold">Success (≥252 bars)</div>
           <div className="text-base font-bold text-emerald-700 mt-0.5">{successCount} / {totalCount}</div>
         </div>
-        <div className="p-2.5 bg-white rounded-lg border border-blue-200">
-          <div className="text-blue-700 text-[10px] uppercase font-semibold">In Flight</div>
-          <div className="text-base font-bold text-blue-700 mt-0.5">{loadingCount} Active</div>
+        <div className="p-2.5 bg-white rounded-lg border border-emerald-300">
+          <div className="text-emerald-800 text-[10px] uppercase font-semibold">In Flight</div>
+          <div className="text-base font-bold text-emerald-800 mt-0.5">{loadingCount} Active</div>
         </div>
-        <div className="p-2.5 bg-white rounded-lg border border-amber-200">
-          <div className="text-amber-700 text-[10px] uppercase font-semibold">Insufficient Data</div>
-          <div className="text-base font-bold text-amber-700 mt-0.5">{insufficientCount}</div>
+        <div className="p-2.5 bg-white rounded-lg border border-lime-300">
+          <div className="text-lime-800 text-[10px] uppercase font-semibold">Insufficient Data</div>
+          <div className="text-base font-bold text-lime-800 mt-0.5">{insufficientCount}</div>
         </div>
-        <div className="p-2.5 bg-white rounded-lg border border-rose-200 col-span-2 sm:col-span-1">
-          <div className="text-rose-700 text-[10px] uppercase font-semibold">Failed / Error</div>
-          <div className="text-base font-bold text-rose-700 mt-0.5">{failedCount}</div>
+        <div className="p-2.5 bg-white rounded-lg border border-emerald-300 col-span-2 sm:col-span-1">
+          <div className="text-emerald-900 text-[10px] uppercase font-semibold">Failed / Error</div>
+          <div className="text-base font-bold text-emerald-900 mt-0.5">{failedCount}</div>
         </div>
       </div>
 
@@ -222,7 +222,7 @@ export const PortfolioDataStatus: React.FC<PortfolioDataStatusProps> = ({
             placeholder="Search ticker, company, category..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-9 pr-3 py-1.5 bg-slate-50 border border-slate-300 rounded-lg text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white"
+            className="w-full pl-9 pr-3 py-1.5 bg-slate-50 border border-slate-300 rounded-lg text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:bg-white"
           />
         </div>
 
@@ -235,7 +235,7 @@ export const PortfolioDataStatus: React.FC<PortfolioDataStatusProps> = ({
               id="status-filter-select"
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value as any)}
-              className="px-2.5 py-1.5 bg-slate-50 border border-slate-300 rounded-lg text-xs text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="px-2.5 py-1.5 bg-slate-50 border border-slate-300 rounded-lg text-xs text-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-600"
             >
               <option value="all">All Statuses ({records.length})</option>
               <option value="success">Success ({successCount})</option>
@@ -251,7 +251,7 @@ export const PortfolioDataStatus: React.FC<PortfolioDataStatusProps> = ({
             id="category-filter-select"
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
-            className="px-2.5 py-1.5 bg-slate-50 border border-slate-300 rounded-lg text-xs text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="px-2.5 py-1.5 bg-slate-50 border border-slate-300 rounded-lg text-xs text-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-600"
           >
             <option value="all">All Categories</option>
             {categories.map((cat) => (
@@ -293,7 +293,7 @@ export const PortfolioDataStatus: React.FC<PortfolioDataStatusProps> = ({
                     key={record.ticker}
                     id={`data-row-${record.ticker}`}
                     className={`hover:bg-slate-50/80 transition-colors ${
-                      isBenchmark ? 'bg-blue-50/30 font-medium' : ''
+                      isBenchmark ? 'bg-emerald-100/40 font-medium' : ''
                     }`}
                   >
                     {/* Ticker */}
@@ -301,7 +301,7 @@ export const PortfolioDataStatus: React.FC<PortfolioDataStatusProps> = ({
                       <div className="flex items-center gap-1.5">
                         <span>{record.ticker}</span>
                         {isBenchmark && (
-                          <span className="text-[9px] bg-blue-100 text-blue-800 font-sans px-1.5 py-0.5 rounded font-semibold">
+                          <span className="text-[9px] bg-emerald-200 text-emerald-950 font-sans px-1.5 py-0.5 rounded font-semibold">
                             Benchmark
                           </span>
                         )}
@@ -328,7 +328,7 @@ export const PortfolioDataStatus: React.FC<PortfolioDataStatusProps> = ({
                           className={
                             record.validBarCount >= MIN_REQUIRED_DAILY_BARS
                               ? 'text-emerald-700'
-                              : 'text-amber-700'
+                              : 'text-lime-800'
                           }
                         >
                           {record.validBarCount}
@@ -351,7 +351,7 @@ export const PortfolioDataStatus: React.FC<PortfolioDataStatusProps> = ({
                     {/* Diagnostics / Error message */}
                     <td className="py-3 px-4 text-slate-600">
                       {record.errorMessage ? (
-                        <span className="text-rose-700 font-medium text-[11px] leading-tight block max-w-xs sm:max-w-sm">
+                        <span className="text-emerald-950 font-medium text-[11px] leading-tight block max-w-xs sm:max-w-sm">
                           {record.errorMessage}
                         </span>
                       ) : record.status === 'success' ? (
@@ -360,7 +360,7 @@ export const PortfolioDataStatus: React.FC<PortfolioDataStatusProps> = ({
                           <span>Complete time series cached in memory</span>
                         </span>
                       ) : record.status === 'loading' ? (
-                        <span className="text-blue-600 text-[11px] flex items-center gap-1">
+                        <span className="text-emerald-700 text-[11px] flex items-center gap-1">
                           <Loader2 className="w-3 h-3 animate-spin shrink-0" />
                           <span>Fetching ~600 daily bars...</span>
                         </span>

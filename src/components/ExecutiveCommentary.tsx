@@ -175,8 +175,8 @@ export const ExecutiveCommentary: React.FC<ExecutiveCommentaryProps> = ({
             >
               Executive Commentary &amp; Strategy Memo
             </h2>
-            <span className="text-[11px] font-semibold px-2 py-0.5 bg-indigo-50 text-indigo-700 rounded border border-indigo-200 flex items-center gap-1">
-              <Sparkles className="w-3 h-3 text-indigo-600" />
+            <span className="text-[11px] font-semibold px-2 py-0.5 bg-emerald-50 text-emerald-800 rounded border border-emerald-300 flex items-center gap-1">
+              <Sparkles className="w-3 h-3 text-emerald-700" />
               <span>Investment Committee Synthesis</span>
             </span>
           </div>
@@ -199,9 +199,9 @@ export const ExecutiveCommentary: React.FC<ExecutiveCommentaryProps> = ({
           ) : isOptimizationReady ? (
             <span
               id="commentary-status-badge"
-              className="flex items-center gap-1.5 bg-blue-50 text-blue-800 px-3 py-1 rounded-lg border border-blue-200 font-medium"
+              className="flex items-center gap-1.5 bg-emerald-50 text-emerald-900 px-3 py-1 rounded-lg border border-emerald-300 font-medium"
             >
-              <FileText className="w-3.5 h-3.5 text-blue-600" />
+              <FileText className="w-3.5 h-3.5 text-emerald-700" />
               <span>Review Surface Ready</span>
             </span>
           ) : (
@@ -279,10 +279,10 @@ export const ExecutiveCommentary: React.FC<ExecutiveCommentaryProps> = ({
               <div className="p-3.5 bg-white rounded-lg border border-slate-200 text-xs">
                 <div className="flex items-center justify-between font-semibold text-slate-800 pb-1.5 mb-1.5 border-b border-slate-100">
                   <span className="flex items-center gap-1.5">
-                    <Sliders className="w-3.5 h-3.5 text-blue-600" />
+                    <Sliders className="w-3.5 h-3.5 text-emerald-700" />
                     Strategy &amp; Thesis
                   </span>
-                  <span className="text-[10px] font-mono bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded border border-blue-200">
+                  <span className="text-[10px] font-mono bg-emerald-50 text-emerald-800 px-1.5 py-0.5 rounded border border-emerald-300">
                     $1,000,000 Target
                   </span>
                 </div>
@@ -305,7 +305,7 @@ export const ExecutiveCommentary: React.FC<ExecutiveCommentaryProps> = ({
                       .maxWeightConstraintPassed ? (
                       <span className="text-emerald-700 font-semibold">Yes</span>
                     ) : (
-                      <span className="text-rose-700 font-semibold">No</span>
+                      <span className="text-emerald-950 font-semibold">No</span>
                     )}
                     ).
                   </p>
@@ -345,7 +345,7 @@ export const ExecutiveCommentary: React.FC<ExecutiveCommentaryProps> = ({
                     {reviewObject.dataSourceStatus.dataFailuresOrErrors.length === 0 ? (
                       <span className="text-emerald-700 font-semibold">0 Failures</span>
                     ) : (
-                      <span className="text-amber-700 font-semibold">
+                      <span className="text-lime-800 font-semibold">
                         {reviewObject.dataSourceStatus.dataFailuresOrErrors.length} Issue(s)
                       </span>
                     )}
@@ -357,10 +357,10 @@ export const ExecutiveCommentary: React.FC<ExecutiveCommentaryProps> = ({
               <div className="p-3.5 bg-white rounded-lg border border-slate-200 text-xs">
                 <div className="flex items-center justify-between font-semibold text-slate-800 pb-1.5 mb-1.5 border-b border-slate-100">
                   <span className="flex items-center gap-1.5">
-                    <TrendingUp className="w-3.5 h-3.5 text-indigo-600" />
+                    <TrendingUp className="w-3.5 h-3.5 text-emerald-700" />
                     Key Risk Comparisons
                   </span>
-                  <span className="text-[10px] font-mono bg-indigo-50 text-indigo-700 px-1.5 py-0.5 rounded border border-indigo-200">
+                  <span className="text-[10px] font-mono bg-emerald-50 text-emerald-800 px-1.5 py-0.5 rounded border border-emerald-300">
                     {reviewObject.portfolioMetrics.optimizerStatus}
                   </span>
                 </div>
@@ -431,7 +431,7 @@ export const ExecutiveCommentary: React.FC<ExecutiveCommentaryProps> = ({
                             className={`px-1.5 py-0.5 rounded text-[10px] font-semibold ${
                               h.inclusionReason === 'Eligible Technical Pass'
                                 ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                                : 'bg-amber-50 text-amber-700 border border-amber-200'
+                                : 'bg-lime-50 text-lime-800 border border-lime-300'
                             }`}
                           >
                             {h.inclusionReason}
@@ -501,8 +501,8 @@ export const ExecutiveCommentary: React.FC<ExecutiveCommentaryProps> = ({
                   <span>OpenRouter Key Set</span>
                 </span>
               ) : (
-                <span className="flex items-center gap-1 px-2.5 py-1 bg-rose-50 text-rose-800 rounded-md border border-rose-200 font-medium">
-                  <AlertTriangle className="w-3.5 h-3.5 text-rose-600" />
+                <span className="flex items-center gap-1 px-2.5 py-1 bg-emerald-100/70 text-emerald-900 rounded-md border border-emerald-300 font-medium">
+                  <AlertTriangle className="w-3.5 h-3.5 text-emerald-800" />
                   <span>Missing OpenRouter API Key</span>
                 </span>
               )}
@@ -524,7 +524,7 @@ export const ExecutiveCommentary: React.FC<ExecutiveCommentaryProps> = ({
                 value={apiKeys.openRouterModel}
                 onChange={(e) => onUpdateKeys({ openRouterModel: e.target.value })}
                 placeholder="e.g., anthropic/claude-3.7-sonnet"
-                className="w-full px-3 py-2 text-xs font-mono bg-slate-50 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white text-slate-900"
+                className="w-full px-3 py-2 text-xs font-mono bg-slate-50 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:bg-white text-slate-900"
               />
               {/* Quick model presets chips */}
               <div className="flex items-center gap-1.5 flex-wrap pt-1">
@@ -536,7 +536,7 @@ export const ExecutiveCommentary: React.FC<ExecutiveCommentaryProps> = ({
                     onClick={() => onUpdateKeys({ openRouterModel: m.id })}
                     className={`text-[10px] px-2 py-0.5 rounded border transition-colors cursor-pointer ${
                       activeModel === m.id
-                        ? 'bg-indigo-100 text-indigo-800 border-indigo-300 font-semibold'
+                        ? 'bg-emerald-100 text-emerald-900 border-emerald-400 font-semibold'
                         : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100'
                     }`}
                   >
@@ -565,7 +565,7 @@ export const ExecutiveCommentary: React.FC<ExecutiveCommentaryProps> = ({
               type="checkbox"
               checked={hasReviewed}
               onChange={(e) => setHasReviewed(e.target.checked)}
-              className="mt-0.5 h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
+              className="mt-0.5 h-4 w-4 rounded border-slate-300 text-emerald-700 focus:ring-emerald-600 cursor-pointer"
             />
             <label
               htmlFor="review-surface-checkbox"
@@ -579,13 +579,13 @@ export const ExecutiveCommentary: React.FC<ExecutiveCommentaryProps> = ({
           <div className="pt-2 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div className="text-xs text-slate-500">
               {!isOptimizationReady && (
-                <span className="text-amber-700 flex items-center gap-1 font-medium">
+                <span className="text-lime-800 flex items-center gap-1 font-medium">
                   <AlertCircle className="w-3.5 h-3.5" />
                   Portfolio optimization must be calculated first.
                 </span>
               )}
               {isOptimizationReady && !hasOpenRouterKey && (
-                <span className="text-amber-700 flex items-center gap-1 font-medium">
+                <span className="text-lime-800 flex items-center gap-1 font-medium">
                   <AlertCircle className="w-3.5 h-3.5" />
                   Enter OpenRouter API Key in Data Access Panel.
                 </span>
@@ -609,7 +609,7 @@ export const ExecutiveCommentary: React.FC<ExecutiveCommentaryProps> = ({
               type="button"
               onClick={handleGenerate}
               disabled={!canGenerate}
-              className="inline-flex items-center justify-center gap-2 px-5 py-2.5 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-300 disabled:text-slate-500 disabled:cursor-not-allowed rounded-lg shadow-sm transition-all cursor-pointer"
+              className="inline-flex items-center justify-center gap-2 px-5 py-2.5 text-xs font-bold text-white bg-emerald-700 hover:bg-emerald-800 disabled:bg-slate-300 disabled:text-slate-500 disabled:cursor-not-allowed rounded-lg shadow-sm transition-all cursor-pointer"
             >
               {isGenerating ? (
                 <>
@@ -630,15 +630,15 @@ export const ExecutiveCommentary: React.FC<ExecutiveCommentaryProps> = ({
         {generationError && (
           <div
             id="commentary-error-alert"
-            className="p-4 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-900"
+            className="p-4 bg-emerald-100/70 border border-emerald-300 rounded-xl text-xs text-emerald-950"
           >
             <div className="flex items-start gap-2.5">
-              <XCircle className="w-5 h-5 text-rose-600 shrink-0 mt-0.5" />
+              <XCircle className="w-5 h-5 text-emerald-800 shrink-0 mt-0.5" />
               <div className="space-y-1">
-                <span className="font-bold text-sm text-rose-950">
+                <span className="font-bold text-sm text-emerald-950">
                   Commentary Generation Failed
                 </span>
-                <p className="text-rose-800 leading-relaxed font-mono text-[11px]">
+                <p className="text-emerald-900 leading-relaxed font-mono text-[11px]">
                   {generationError}
                 </p>
                 <p className="text-slate-600 text-[11px] pt-1">
@@ -653,20 +653,20 @@ export const ExecutiveCommentary: React.FC<ExecutiveCommentaryProps> = ({
         {commentaryResult ? (
           <div
             id="rendered-executive-memo"
-            className="bg-white rounded-xl border-2 border-indigo-200 shadow-sm overflow-hidden"
+            className="bg-white rounded-xl border-2 border-emerald-300 shadow-sm overflow-hidden"
           >
             {/* Memo Top Header */}
-            <div className="p-5 bg-gradient-to-r from-indigo-900 via-slate-900 to-indigo-950 text-white flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div className="p-5 bg-gradient-to-r from-emerald-950 via-slate-950 to-emerald-900 text-white flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 bg-indigo-500/30 text-indigo-200 rounded border border-indigo-400/30">
+                  <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 bg-emerald-500/30 text-emerald-200 rounded border border-emerald-400/30">
                     Confidential
                   </span>
                   <h3 className="text-base sm:text-lg font-bold text-white">
                     Investment Committee Strategy Memo
                   </h3>
                 </div>
-                <p className="text-xs text-indigo-200 mt-1">
+                <p className="text-xs text-emerald-200 mt-1">
                   Synthesized via {commentaryResult.modelUsed || activeModel} •{' '}
                   {commentaryResult.generatedAt
                     ? new Date(commentaryResult.generatedAt).toLocaleString()
@@ -679,7 +679,7 @@ export const ExecutiveCommentary: React.FC<ExecutiveCommentaryProps> = ({
                   id="copy-commentary-text-button"
                   type="button"
                   onClick={handleCopyCommentary}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-white bg-indigo-700 hover:bg-indigo-600 border border-indigo-500 rounded-lg transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-white bg-emerald-800 hover:bg-emerald-700 border border-emerald-600 rounded-lg transition-colors cursor-pointer"
                 >
                   {isCommentaryCopied ? (
                     <>
@@ -688,7 +688,7 @@ export const ExecutiveCommentary: React.FC<ExecutiveCommentaryProps> = ({
                     </>
                   ) : (
                     <>
-                      <Copy className="w-3.5 h-3.5 text-indigo-200" />
+                      <Copy className="w-3.5 h-3.5 text-emerald-200" />
                       <span>Copy Memo</span>
                     </>
                   )}
@@ -698,7 +698,7 @@ export const ExecutiveCommentary: React.FC<ExecutiveCommentaryProps> = ({
                   type="button"
                   onClick={handleGenerate}
                   disabled={!canGenerate}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-indigo-200 hover:text-white bg-indigo-800/60 hover:bg-indigo-800 border border-indigo-700 rounded-lg transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-emerald-200 hover:text-white bg-emerald-800/60 hover:bg-emerald-800 border border-emerald-700 rounded-lg transition-colors cursor-pointer"
                   title="Re-run synthesis with updated data or model"
                 >
                   <RefreshCw className="w-3.5 h-3.5" />
@@ -711,8 +711,8 @@ export const ExecutiveCommentary: React.FC<ExecutiveCommentaryProps> = ({
             <div className="p-6 space-y-6 text-slate-800">
               {/* Section 1: Portfolio Overview */}
               <div id="memo-portfolio-overview" className="space-y-2">
-                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-indigo-900 border-b border-indigo-100 pb-1.5">
-                  <FileText className="w-4 h-4 text-indigo-600" />
+                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-emerald-950 border-b border-emerald-200 pb-1.5">
+                  <FileText className="w-4 h-4 text-emerald-700" />
                   <span>1. Executive Portfolio Overview &amp; Strategic Regime</span>
                 </div>
                 <p className="text-sm text-slate-700 leading-relaxed bg-slate-50/70 p-4 rounded-lg border border-slate-200">
@@ -722,8 +722,8 @@ export const ExecutiveCommentary: React.FC<ExecutiveCommentaryProps> = ({
 
               {/* Section 2: Technical Signal Summary */}
               <div id="memo-signal-summary" className="space-y-2">
-                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-indigo-900 border-b border-indigo-100 pb-1.5">
-                  <TrendingUp className="w-4 h-4 text-indigo-600" />
+                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-emerald-950 border-b border-emerald-200 pb-1.5">
+                  <TrendingUp className="w-4 h-4 text-emerald-700" />
                   <span>2. Technical Momentum &amp; Trend Signal Breakdown</span>
                 </div>
                 <p className="text-sm text-slate-700 leading-relaxed bg-slate-50/70 p-4 rounded-lg border border-slate-200">
@@ -733,18 +733,18 @@ export const ExecutiveCommentary: React.FC<ExecutiveCommentaryProps> = ({
 
               {/* Section 3: Primary Portfolio Risks */}
               <div id="memo-primary-risks" className="space-y-2">
-                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-rose-900 border-b border-rose-100 pb-1.5">
-                  <AlertTriangle className="w-4 h-4 text-rose-600" />
+                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-emerald-950 border-b border-emerald-200 pb-1.5">
+                  <AlertTriangle className="w-4 h-4 text-emerald-800" />
                   <span>3. Primary Portfolio Risk Factors &amp; Vulnerabilities</span>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   {commentaryResult.primary_risks.map((risk, idx) => (
                     <div
                       key={idx}
-                      className="p-3.5 bg-rose-50/40 rounded-lg border border-rose-200 text-xs text-rose-950 flex flex-col justify-between"
+                      className="p-3.5 bg-emerald-100/70/40 rounded-lg border border-emerald-300 text-xs text-emerald-950 flex flex-col justify-between"
                     >
-                      <div className="flex items-center gap-1.5 font-bold text-rose-900 mb-1.5">
-                        <span className="w-4 h-4 rounded-full bg-rose-200 text-rose-800 flex items-center justify-center text-[10px]">
+                      <div className="flex items-center gap-1.5 font-bold text-emerald-950 mb-1.5">
+                        <span className="w-4 h-4 rounded-full bg-emerald-200 text-emerald-900 flex items-center justify-center text-[10px]">
                           {idx + 1}
                         </span>
                         <span>Risk Vector</span>
@@ -757,18 +757,18 @@ export const ExecutiveCommentary: React.FC<ExecutiveCommentaryProps> = ({
 
               {/* Section 4: Data Limitations */}
               <div id="memo-data-limitations" className="space-y-2">
-                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-amber-900 border-b border-amber-100 pb-1.5">
-                  <Database className="w-4 h-4 text-amber-600" />
+                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-lime-950 border-b border-lime-200 pb-1.5">
+                  <Database className="w-4 h-4 text-lime-700" />
                   <span>4. Data Limitations, Sample Biases &amp; Model Caveats</span>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {commentaryResult.data_limitations.map((limitation, idx) => (
                     <div
                       key={idx}
-                      className="p-3.5 bg-amber-50/40 rounded-lg border border-amber-200 text-xs text-amber-950"
+                      className="p-3.5 bg-lime-50/40 rounded-lg border border-lime-300 text-xs text-lime-950"
                     >
-                      <div className="flex items-center gap-1.5 font-bold text-amber-900 mb-1.5">
-                        <span className="w-4 h-4 rounded-full bg-amber-200 text-amber-800 flex items-center justify-center text-[10px]">
+                      <div className="flex items-center gap-1.5 font-bold text-lime-950 mb-1.5">
+                        <span className="w-4 h-4 rounded-full bg-lime-200 text-lime-900 flex items-center justify-center text-[10px]">
                           {idx + 1}
                         </span>
                         <span>Limitation Factor</span>
@@ -783,17 +783,17 @@ export const ExecutiveCommentary: React.FC<ExecutiveCommentaryProps> = ({
 
               {/* Section 5: Committee Questions */}
               <div id="memo-committee-questions" className="space-y-2">
-                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-blue-900 border-b border-blue-100 pb-1.5">
-                  <HelpCircle className="w-4 h-4 text-blue-600" />
+                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-emerald-950 border-b border-emerald-200 pb-1.5">
+                  <HelpCircle className="w-4 h-4 text-emerald-700" />
                   <span>5. Fictional Investment Committee Inquiries &amp; Debate Prompts</span>
                 </div>
                 <div className="space-y-2.5">
                   {commentaryResult.committee_questions.map((question, idx) => (
                     <div
                       key={idx}
-                      className="p-3.5 bg-blue-50/40 rounded-lg border border-blue-200 text-xs text-slate-800 flex items-start gap-2.5"
+                      className="p-3.5 bg-emerald-50/40 rounded-lg border border-emerald-300 text-xs text-slate-800 flex items-start gap-2.5"
                     >
-                      <span className="w-5 h-5 rounded-full bg-blue-200 text-blue-800 flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">
+                      <span className="w-5 h-5 rounded-full bg-emerald-200 text-emerald-900 flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">
                         Q{idx + 1}
                       </span>
                       <p className="text-xs text-slate-700 font-medium leading-relaxed">
@@ -822,7 +822,7 @@ export const ExecutiveCommentary: React.FC<ExecutiveCommentaryProps> = ({
               id="executive-commentary-status-text"
               className="text-sm font-bold text-slate-800 flex items-center gap-1.5"
             >
-              <AlertCircle className="w-4 h-4 text-amber-500" />
+              <AlertCircle className="w-4 h-4 text-lime-600" />
               <span>Awaiting Human Review &amp; Synthesis</span>
             </h3>
             <p className="text-xs text-slate-500 mt-1 max-w-md leading-relaxed">

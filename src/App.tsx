@@ -166,7 +166,7 @@ export default function App() {
   const hasTwelveDataKey = Boolean(apiKeys.twelveDataApiKey.trim());
 
   return (
-    <div id="portfolio-app-root" className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans">
+    <div id="portfolio-app-root" className="min-h-screen bg-emerald-50/40 text-emerald-950 flex flex-col font-sans">
       {/* 1. Header with title, subtitle, and educational notice */}
       <Header />
 
@@ -247,7 +247,7 @@ export default function App() {
       <footer id="app-footer" className="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-500">
         <div className="max-w-7xl mx-auto px-4">
           <p className="font-medium text-slate-700">
-            Experience Economy Momentum Portfolio • Quantitative Minimum-Variance Research Framework
+            Travel & Experience Portfolio Monitor • Quantitative Minimum-Variance Research Framework
           </p>
           <p className="mt-1 text-slate-400">
             Convex quadratic portfolio optimization with box constraints &bull; Base-100 Cumulative Index &bull; Historical In-Memory Cache

@@ -4,6 +4,7 @@ import {
   CheckCircle2,
   XCircle,
   AlertCircle,
+  AlertTriangle,
   Clock,
   ArrowUpDown,
   ArrowUp,
@@ -70,7 +71,9 @@ export const CandidateScreening: React.FC<CandidateScreeningProps> = ({ dataMap 
   // Aggregate summary statistics
   const totalCandidates = screenedCandidates.length;
   const sufficientDataCount = screenedCandidates.filter((c) => c.hasSufficientData).length;
-  const eligibleCount = screenedCandidates.filter((c) => c.eligibility === 'Eligible').length;
+  const normallyEligibleCount = screenedCandidates.filter((c) => c.eligibility === 'Eligible').length;
+  const fallbackCount = screenedCandidates.filter((c) => c.eligibility === 'Fallback Included').length;
+  const totalEligibleCount = normallyEligibleCount + fallbackCount;
   const ineligibleCount = screenedCandidates.filter((c) => c.eligibility === 'Ineligible').length;
   const unavailableCount = screenedCandidates.filter((c) => c.eligibility === 'Data unavailable').length;
 
@@ -85,7 +88,7 @@ export const CandidateScreening: React.FC<CandidateScreeningProps> = ({ dataMap 
       }
       const entry = map.get(c.category)!;
       entry.total += 1;
-      if (c.eligibility === 'Eligible') {
+      if (c.eligibility === 'Eligible' || c.eligibility === 'Fallback Included') {
         entry.eligible += 1;
       }
       entry.candidates.push(c);
@@ -180,8 +183,8 @@ export const CandidateScreening: React.FC<CandidateScreeningProps> = ({ dataMap 
             valB = b.technicalScore ?? -1;
             break;
           case 'eligibility':
-            valA = a.eligibility === 'Eligible' ? 2 : a.eligibility === 'Ineligible' ? 1 : 0;
-            valB = b.eligibility === 'Eligible' ? 2 : b.eligibility === 'Ineligible' ? 1 : 0;
+            valA = a.eligibility === 'Eligible' ? 3 : a.eligibility === 'Fallback Included' ? 2 : a.eligibility === 'Ineligible' ? 1 : 0;
+            valB = b.eligibility === 'Eligible' ? 3 : b.eligibility === 'Fallback Included' ? 2 : b.eligibility === 'Ineligible' ? 1 : 0;
             break;
         }
 
@@ -209,10 +212,17 @@ export const CandidateScreening: React.FC<CandidateScreeningProps> = ({ dataMap 
             <span>Eligible</span>
           </span>
         );
+      case 'Fallback Included':
+        return (
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-lime-100 text-lime-900 border border-lime-300">
+            <AlertTriangle className="w-3.5 h-3.5 text-lime-700" />
+            <span>Fallback Included</span>
+          </span>
+        );
       case 'Ineligible':
         return (
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-800 border border-amber-300">
-            <XCircle className="w-3.5 h-3.5 text-amber-600" />
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-slate-100 text-slate-700 border border-slate-300">
+            <XCircle className="w-3.5 h-3.5 text-slate-500" />
             <span>Ineligible</span>
           </span>
         );
@@ -237,13 +247,13 @@ export const CandidateScreening: React.FC<CandidateScreeningProps> = ({ dataMap 
         );
       case 'Mixed':
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-semibold bg-blue-50 text-blue-700 border border-blue-200">
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-semibold bg-emerald-100 text-emerald-900 border border-emerald-300">
             <span>Mixed</span>
           </span>
         );
       case 'Caution':
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-semibold bg-rose-50 text-rose-700 border border-rose-200">
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-semibold bg-emerald-200/80 text-emerald-950 border border-emerald-400">
             <span>Caution</span>
           </span>
         );
@@ -270,9 +280,9 @@ export const CandidateScreening: React.FC<CandidateScreeningProps> = ({ dataMap 
           <span>{label}</span>
           {isActive ? (
             sortDirection === 'asc' ? (
-              <ArrowUp className="w-3.5 h-3.5 text-blue-600" />
+              <ArrowUp className="w-3.5 h-3.5 text-emerald-700" />
             ) : (
-              <ArrowDown className="w-3.5 h-3.5 text-blue-600" />
+              <ArrowDown className="w-3.5 h-3.5 text-emerald-700" />
             )
           ) : (
             <ArrowUpDown className="w-3 h-3 text-slate-400 opacity-60" />
@@ -288,7 +298,7 @@ export const CandidateScreening: React.FC<CandidateScreeningProps> = ({ dataMap 
         {/* Section Header */}
         <div className="p-5 border-b border-slate-200 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 bg-slate-50/75">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 bg-blue-50 border border-blue-200 rounded-lg text-blue-700">
+            <div className="p-2 bg-emerald-100 border border-emerald-300 rounded-lg text-emerald-800">
               <Filter className="w-5 h-5" />
             </div>
             <div>
@@ -296,7 +306,7 @@ export const CandidateScreening: React.FC<CandidateScreeningProps> = ({ dataMap 
                 <h2 id="candidate-screening-heading" className="text-base sm:text-lg font-bold text-slate-900">
                   Candidate Technical Screening Pipeline
                 </h2>
-                <span className="text-[11px] font-semibold px-2 py-0.5 bg-blue-100 text-blue-800 rounded border border-blue-200">
+                <span className="text-[11px] font-semibold px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded border border-emerald-300">
                   20 Universe Stocks
                 </span>
               </div>
@@ -314,7 +324,7 @@ export const CandidateScreening: React.FC<CandidateScreeningProps> = ({ dataMap 
               onClick={() => setShowMethodologyModal(!showMethodologyModal)}
               className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-700 bg-white hover:bg-slate-100 border border-slate-300 rounded-lg transition-colors cursor-pointer"
             >
-              <Info className="w-3.5 h-3.5 text-blue-600" />
+              <Info className="w-3.5 h-3.5 text-emerald-700" />
               <span>{showMethodologyModal ? 'Hide Scoring Rules' : 'Scoring Rules &amp; Logic'}</span>
             </button>
           </div>
@@ -322,49 +332,49 @@ export const CandidateScreening: React.FC<CandidateScreeningProps> = ({ dataMap 
 
         {/* Scoring Methodology Collapsible Callout */}
         {showMethodologyModal && (
-          <div id="screening-methodology-details" className="p-4 sm:p-5 bg-blue-50/50 border-b border-blue-100 text-xs text-slate-700">
+          <div id="screening-methodology-details" className="p-4 sm:p-5 bg-emerald-50/60 border-b border-emerald-200 text-xs text-slate-700">
             <div className="flex items-center gap-2 font-bold text-slate-900 mb-2">
-              <Award className="w-4 h-4 text-blue-600" />
+              <Award className="w-4 h-4 text-emerald-700" />
               <span>Deterministic Technical Scoring Framework (0 to 4 Points)</span>
             </div>
             <p className="mb-3 text-slate-600 leading-relaxed">
               Every candidate with at least 252 valid daily trading observations is evaluated against 4 objective, rule-based quantitative criteria:
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-              <div className="p-3 bg-white rounded-lg border border-blue-200 shadow-2xs">
-                <div className="font-bold text-blue-900 flex items-center justify-between">
+              <div className="p-3 bg-white rounded-lg border border-emerald-200 shadow-2xs">
+                <div className="font-bold text-emerald-900 flex items-center justify-between">
                   <span>1. Price Trend (+1 pt)</span>
-                  <span className="font-mono bg-blue-100 text-blue-800 text-[10px] px-1.5 py-0.5 rounded">Close &gt; SMA 200</span>
+                  <span className="font-mono bg-emerald-100 text-emerald-800 text-[10px] px-1.5 py-0.5 rounded">Close &gt; SMA 200</span>
                 </div>
                 <p className="text-[11px] text-slate-600 mt-1">
                   Confirms the asset is trading in an expansive structural uptrend above its long-term baseline.
                 </p>
               </div>
 
-              <div className="p-3 bg-white rounded-lg border border-blue-200 shadow-2xs">
-                <div className="font-bold text-blue-900 flex items-center justify-between">
+              <div className="p-3 bg-white rounded-lg border border-emerald-200 shadow-2xs">
+                <div className="font-bold text-emerald-900 flex items-center justify-between">
                   <span>2. Golden Cross (+1 pt)</span>
-                  <span className="font-mono bg-blue-100 text-blue-800 text-[10px] px-1.5 py-0.5 rounded">SMA 50 &gt; SMA 200</span>
+                  <span className="font-mono bg-emerald-100 text-emerald-800 text-[10px] px-1.5 py-0.5 rounded">SMA 50 &gt; SMA 200</span>
                 </div>
                 <p className="text-[11px] text-slate-600 mt-1">
                   Verifies medium-term 50-day moving average is advancing above the 200-day secular trend.
                 </p>
               </div>
 
-              <div className="p-3 bg-white rounded-lg border border-blue-200 shadow-2xs">
-                <div className="font-bold text-blue-900 flex items-center justify-between">
+              <div className="p-3 bg-white rounded-lg border border-emerald-200 shadow-2xs">
+                <div className="font-bold text-emerald-900 flex items-center justify-between">
                   <span>3. MACD Momentum (+1 pt)</span>
-                  <span className="font-mono bg-blue-100 text-blue-800 text-[10px] px-1.5 py-0.5 rounded">MACD &gt; Signal</span>
+                  <span className="font-mono bg-emerald-100 text-emerald-800 text-[10px] px-1.5 py-0.5 rounded">MACD &gt; Signal</span>
                 </div>
                 <p className="text-[11px] text-slate-600 mt-1">
                   Fast exponential momentum (12/26) leads above the 9-day trigger signal line.
                 </p>
               </div>
 
-              <div className="p-3 bg-white rounded-lg border border-blue-200 shadow-2xs">
-                <div className="font-bold text-blue-900 flex items-center justify-between">
+              <div className="p-3 bg-white rounded-lg border border-emerald-200 shadow-2xs">
+                <div className="font-bold text-emerald-900 flex items-center justify-between">
                   <span>4. RSI Window (+1 pt)</span>
-                  <span className="font-mono bg-blue-100 text-blue-800 text-[10px] px-1.5 py-0.5 rounded">45 &le; RSI(14) &le; 70</span>
+                  <span className="font-mono bg-emerald-100 text-emerald-800 text-[10px] px-1.5 py-0.5 rounded">45 &le; RSI(14) &le; 70</span>
                 </div>
                 <p className="text-[11px] text-slate-600 mt-1">
                   Bullish RSI range without extreme overbought exhaustion (&gt;70) or bearish decay (&lt;45).
@@ -372,15 +382,15 @@ export const CandidateScreening: React.FC<CandidateScreeningProps> = ({ dataMap 
               </div>
             </div>
 
-            <div className="mt-3 p-2.5 bg-white/90 rounded border border-blue-200 flex items-center justify-between flex-wrap gap-2 text-[11px]">
+            <div className="mt-3 p-2.5 bg-white/90 rounded border border-emerald-200 flex items-center justify-between flex-wrap gap-2 text-[11px]">
               <div className="flex items-center gap-2">
                 <span className="font-bold text-slate-800">Eligibility Verdict:</span>
                 <span className="inline-flex items-center gap-1 text-emerald-700 font-semibold">
                   <Check className="w-3.5 h-3.5 text-emerald-600" /> Score &ge; 2 = Eligible
                 </span>
                 <span className="text-slate-300">|</span>
-                <span className="inline-flex items-center gap-1 text-amber-700 font-semibold">
-                  <X className="w-3.5 h-3.5 text-amber-600" /> Score &lt; 2 = Ineligible
+                <span className="inline-flex items-center gap-1 text-lime-800 font-semibold">
+                  <X className="w-3.5 h-3.5 text-lime-700" /> Score &lt; 2 = Ineligible
                 </span>
               </div>
               <div className="text-slate-500">
@@ -411,25 +421,29 @@ export const CandidateScreening: React.FC<CandidateScreeningProps> = ({ dataMap 
 
             {/* Metric 3: Eligible */}
             <div className="p-3 bg-white rounded-lg border border-emerald-200">
-              <div className="text-emerald-700 text-[10px] uppercase font-semibold">Eligible (Score &ge; 2)</div>
+              <div className="text-emerald-700 text-[10px] uppercase font-semibold">Eligible (15-Stock Floor)</div>
               <div className="text-lg font-bold text-emerald-700 mt-0.5">
-                {eligibleCount} <span className="text-xs font-normal text-emerald-600">Qualified</span>
+                {totalEligibleCount} <span className="text-xs font-normal text-emerald-600">Eligible</span>
               </div>
-              <div className="text-[10px] text-emerald-600 mt-0.5">Passes technical filter</div>
+              <div className="text-[10px] text-emerald-600 mt-0.5">
+                {fallbackCount > 0
+                  ? `${normallyEligibleCount} Qualified + ${fallbackCount} Fallback`
+                  : `${normallyEligibleCount} Qualified`}
+              </div>
             </div>
 
-            {/* Metric 4: Ineligible */}
-            <div className="p-3 bg-white rounded-lg border border-amber-200">
-              <div className="text-amber-700 text-[10px] uppercase font-semibold">Ineligible (Score &lt; 2)</div>
-              <div className="text-lg font-bold text-amber-700 mt-0.5">
-                {ineligibleCount} <span className="text-xs font-normal text-amber-600">Restricted</span>
+            {/* Metric 4: Ineligible / Restricted */}
+            <div className="p-3 bg-white rounded-lg border border-lime-300">
+              <div className="text-lime-800 text-[10px] uppercase font-semibold">Ineligible / Restricted</div>
+              <div className="text-lg font-bold text-lime-800 mt-0.5">
+                {ineligibleCount} <span className="text-xs font-normal text-lime-700">Restricted</span>
               </div>
-              <div className="text-[10px] text-amber-600 mt-0.5">Below technical hurdle</div>
+              <div className="text-[10px] text-lime-700 mt-0.5">Below technical hurdle</div>
             </div>
 
-            {/* Metric 5: Data Unavailable */}
+            {/* Metric 5: Data Unavailable / Pending */}
             <div className="p-3 bg-white rounded-lg border border-slate-200 col-span-2 sm:col-span-1">
-              <div className="text-slate-500 text-[10px] uppercase font-semibold">Data Unavailable</div>
+              <div className="text-slate-500 text-[10px] uppercase font-semibold">Data Unavailable / Pending</div>
               <div className="text-lg font-bold text-slate-600 mt-0.5">{unavailableCount} Pending</div>
               <div className="text-[10px] text-slate-400 mt-0.5">Awaiting data fetch</div>
             </div>
@@ -439,7 +453,7 @@ export const CandidateScreening: React.FC<CandidateScreeningProps> = ({ dataMap 
           <div className="pt-3 border-t border-slate-200">
             <div className="flex items-center justify-between text-xs font-bold text-slate-800 mb-2">
               <span className="flex items-center gap-1.5">
-                <Layers className="w-3.5 h-3.5 text-blue-600" />
+                <Layers className="w-3.5 h-3.5 text-emerald-700" />
                 <span>Category Eligibility Breakdown (5 Sub-Sectors)</span>
               </span>
               <span className="text-[11px] font-normal text-slate-500">
@@ -479,8 +493,10 @@ export const CandidateScreening: React.FC<CandidateScreeningProps> = ({ dataMap 
                         className={`inline-block w-2.5 h-2.5 rounded-full ${
                           c.eligibility === 'Eligible'
                             ? 'bg-emerald-500'
+                            : c.eligibility === 'Fallback Included'
+                            ? 'bg-lime-500'
                             : c.eligibility === 'Ineligible'
-                            ? 'bg-amber-400'
+                            ? 'bg-slate-400'
                             : 'bg-slate-300'
                         }`}
                       />
@@ -503,7 +519,7 @@ export const CandidateScreening: React.FC<CandidateScreeningProps> = ({ dataMap 
               placeholder="Search ticker, company, category..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-9 pr-3 py-1.5 bg-slate-50 border border-slate-300 rounded-lg text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white"
+              className="w-full pl-9 pr-3 py-1.5 bg-slate-50 border border-slate-300 rounded-lg text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:bg-white"
             />
           </div>
 
@@ -514,12 +530,15 @@ export const CandidateScreening: React.FC<CandidateScreeningProps> = ({ dataMap 
               id="candidate-eligibility-filter"
               value={eligibilityFilter}
               onChange={(e) => setEligibilityFilter(e.target.value as any)}
-              className="px-2.5 py-1.5 bg-slate-50 border border-slate-300 rounded-lg text-xs text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="px-2.5 py-1.5 bg-slate-50 border border-slate-300 rounded-lg text-xs text-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-600"
             >
               <option value="all">All Eligibility ({totalCandidates})</option>
-              <option value="Eligible">Eligible ({eligibleCount})</option>
-              <option value="Ineligible">Ineligible ({ineligibleCount})</option>
-              <option value="Data unavailable">Data unavailable ({unavailableCount})</option>
+              <option value="Eligible">Eligible ({normallyEligibleCount})</option>
+              {fallbackCount > 0 && (
+                <option value="Fallback Included">Fallback Included ({fallbackCount})</option>
+              )}
+              <option value="Ineligible">Ineligible / Restricted ({ineligibleCount})</option>
+              <option value="Data unavailable">Data unavailable / Pending ({unavailableCount})</option>
             </select>
 
             {/* Technical Rating Filter */}
@@ -527,7 +546,7 @@ export const CandidateScreening: React.FC<CandidateScreeningProps> = ({ dataMap 
               id="candidate-technical-filter"
               value={technicalFilter}
               onChange={(e) => setTechnicalFilter(e.target.value as any)}
-              className="px-2.5 py-1.5 bg-slate-50 border border-slate-300 rounded-lg text-xs text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="px-2.5 py-1.5 bg-slate-50 border border-slate-300 rounded-lg text-xs text-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-600"
             >
               <option value="all">All Ratings</option>
               <option value="Constructive">Constructive (Score 3–4)</option>
@@ -541,7 +560,7 @@ export const CandidateScreening: React.FC<CandidateScreeningProps> = ({ dataMap 
               id="candidate-category-filter"
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
-              className="px-2.5 py-1.5 bg-slate-50 border border-slate-300 rounded-lg text-xs text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="px-2.5 py-1.5 bg-slate-50 border border-slate-300 rounded-lg text-xs text-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-600"
             >
               <option value="all">All Categories</option>
               {categoryStats.map((c) => (
@@ -597,7 +616,7 @@ export const CandidateScreening: React.FC<CandidateScreeningProps> = ({ dataMap 
                           c.eligibility === 'Eligible'
                             ? 'bg-emerald-50/15'
                             : c.eligibility === 'Ineligible'
-                            ? 'bg-amber-50/10'
+                            ? 'bg-lime-50/15'
                             : ''
                         }`}
                       >
@@ -634,7 +653,7 @@ export const CandidateScreening: React.FC<CandidateScreeningProps> = ({ dataMap 
                             </span>
                           ) : c.smaComparisonLabel === 'Below' ? (
                             <span
-                              className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-semibold bg-rose-50 text-rose-700 border border-rose-200"
+                              className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-semibold bg-emerald-100 text-emerald-950 border border-emerald-300"
                               title={`SMA50 ($${c.sma50?.toFixed(2)}) < SMA200 ($${c.sma200?.toFixed(2)})`}
                             >
                               <span>Below</span>
@@ -655,7 +674,7 @@ export const CandidateScreening: React.FC<CandidateScreeningProps> = ({ dataMap 
                             </span>
                           ) : c.macdStatusLabel === 'Bearish' ? (
                             <span
-                              className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-semibold bg-rose-50 text-rose-700 border border-rose-200"
+                              className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-semibold bg-emerald-100 text-emerald-950 border border-emerald-300"
                               title={`MACD Line (${c.macd?.toFixed(3)}) < Signal (${c.macdSignal?.toFixed(3)})`}
                             >
                               <span>Bearish</span>
@@ -672,9 +691,7 @@ export const CandidateScreening: React.FC<CandidateScreeningProps> = ({ dataMap 
                               className={`font-semibold ${
                                 c.rsi14 >= 45 && c.rsi14 <= 70
                                   ? 'text-emerald-700'
-                                  : c.rsi14 > 70
-                                  ? 'text-rose-700'
-                                  : 'text-amber-700'
+                                  : 'text-emerald-950'
                               }`}
                               title={
                                 c.rsi14 >= 45 && c.rsi14 <= 70
@@ -699,7 +716,7 @@ export const CandidateScreening: React.FC<CandidateScreeningProps> = ({ dataMap 
                                 c.trailing60Return > 0
                                   ? 'text-emerald-700'
                                   : c.trailing60Return < 0
-                                  ? 'text-rose-700'
+                                  ? 'text-emerald-950'
                                   : 'text-slate-800'
                               }`}
                             >
@@ -729,8 +746,8 @@ export const CandidateScreening: React.FC<CandidateScreeningProps> = ({ dataMap 
                                     c.technicalScore >= 3
                                       ? 'bg-emerald-100 text-emerald-900 border border-emerald-300'
                                       : c.technicalScore === 2
-                                      ? 'bg-blue-100 text-blue-900 border border-blue-300'
-                                      : 'bg-amber-100 text-amber-900 border border-amber-300'
+                                      ? 'bg-emerald-200/70 text-emerald-950 border border-emerald-300'
+                                      : 'bg-lime-100 text-lime-950 border border-lime-300'
                                   }`}
                                 >
                                   {c.technicalScore} / 4
@@ -755,7 +772,7 @@ export const CandidateScreening: React.FC<CandidateScreeningProps> = ({ dataMap 
                           <button
                             type="button"
                             onClick={() => setExpandedTicker(isExpanded ? null : c.ticker)}
-                            className="p-1.5 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors cursor-pointer"
+                            className="p-1.5 text-slate-500 hover:text-emerald-700 hover:bg-emerald-50 rounded transition-colors cursor-pointer"
                             title="Inspect 4-point calculation checklist"
                           >
                             {isExpanded ? (
@@ -797,7 +814,7 @@ export const CandidateScreening: React.FC<CandidateScreeningProps> = ({ dataMap 
                                     className={`p-3 rounded-lg border ${
                                       c.scoreBreakdown.priceAboveSma200
                                         ? 'bg-emerald-50/60 border-emerald-200 text-emerald-950'
-                                        : 'bg-rose-50/60 border-rose-200 text-rose-950'
+                                        : 'bg-emerald-100/70 border-emerald-300 text-emerald-950'
                                     }`}
                                   >
                                     <div className="flex items-center justify-between font-bold">
@@ -822,7 +839,7 @@ export const CandidateScreening: React.FC<CandidateScreeningProps> = ({ dataMap 
                                     className={`p-3 rounded-lg border ${
                                       c.scoreBreakdown.sma50AboveSma200
                                         ? 'bg-emerald-50/60 border-emerald-200 text-emerald-950'
-                                        : 'bg-rose-50/60 border-rose-200 text-rose-950'
+                                        : 'bg-emerald-100/70 border-emerald-300 text-emerald-950'
                                     }`}
                                   >
                                     <div className="flex items-center justify-between font-bold">
@@ -847,7 +864,7 @@ export const CandidateScreening: React.FC<CandidateScreeningProps> = ({ dataMap 
                                     className={`p-3 rounded-lg border ${
                                       c.scoreBreakdown.macdAboveSignal
                                         ? 'bg-emerald-50/60 border-emerald-200 text-emerald-950'
-                                        : 'bg-rose-50/60 border-rose-200 text-rose-950'
+                                        : 'bg-emerald-100/70 border-emerald-300 text-emerald-950'
                                     }`}
                                   >
                                     <div className="flex items-center justify-between font-bold">
@@ -872,7 +889,7 @@ export const CandidateScreening: React.FC<CandidateScreeningProps> = ({ dataMap 
                                     className={`p-3 rounded-lg border ${
                                       c.scoreBreakdown.rsiInRange
                                         ? 'bg-emerald-50/60 border-emerald-200 text-emerald-950'
-                                        : 'bg-rose-50/60 border-rose-200 text-rose-950'
+                                        : 'bg-emerald-100/70 border-emerald-300 text-emerald-950'
                                     }`}
                                   >
                                     <div className="flex items-center justify-between font-bold">
@@ -914,11 +931,11 @@ export const CandidateScreening: React.FC<CandidateScreeningProps> = ({ dataMap 
         {/* Table Footer / Summary Bar */}
         <div className="p-3 bg-slate-50 border-t border-slate-200 text-xs text-slate-500 flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-1.5">
-            <Shield className="w-3.5 h-3.5 text-blue-600" />
+            <Shield className="w-3.5 h-3.5 text-emerald-700" />
             <span>Deterministic Scoring: All 20 stocks displayed transparently without model bias or arbitrary omissions.</span>
           </div>
           <span className="font-mono text-slate-500">
-            Eligibility Hurdle: Score &ge; 2 / 4 ({eligibleCount} of {totalCandidates} Passing)
+            Eligibility Hurdle: Score &ge; 2 / 4 ({totalEligibleCount} of {totalCandidates} Passing{fallbackCount > 0 ? `, incl. ${fallbackCount} fallback` : ''})
           </span>
         </div>
       </div>

@@ -141,7 +141,7 @@ export async function generateExecutiveCommentary(
         'Content-Type': 'application/json',
         Authorization: `Bearer ${trimmedKey}`,
         'HTTP-Referer': typeof window !== 'undefined' ? window.location.origin : 'https://experience-portfolio.app',
-        'X-Title': 'Experience Economy Momentum Portfolio',
+        'X-Title': 'Travel & Experience Portfolio Monitor',
       },
       body: JSON.stringify(requestBody),
     });

@@ -1,1 +1,76 @@
 @import "tailwindcss";
+
+@theme {
+  /* Slate remapped to harmonious green shades */
+  --color-slate-50: #f2f8f4;
+  --color-slate-100: #e4f3ea;
+  --color-slate-200: #c7e6d2;
+  --color-slate-300: #9ed4b0;
+  --color-slate-400: #6ab984;
+  --color-slate-500: #3f9b5d;
+  --color-slate-600: #2d7c47;
+  --color-slate-700: #226238;
+  --color-slate-800: #1b4e2d;
+  --color-slate-900: #133a21;
+  --color-slate-950: #0a2113;
+
+  /* Blue & Indigo remapped to deep forest & jade greens */
+  --color-blue-50: #edf7f1;
+  --color-blue-100: #daf0e2;
+  --color-blue-200: #b5e1c5;
+  --color-blue-600: #226e3e;
+  --color-blue-700: #195630;
+  --color-blue-800: #144426;
+  --color-blue-900: #10371f;
+
+  --color-indigo-50: #ebf6ef;
+  --color-indigo-100: #d4eedd;
+  --color-indigo-200: #aee0bf;
+  --color-indigo-600: #1b743f;
+  --color-indigo-700: #155d32;
+  --color-indigo-800: #114a28;
+  --color-indigo-900: #0d3b20;
+
+  /* Amber remapped to olive & lime greens */
+  --color-amber-50: #f5fbe9;
+  --color-amber-100: #e7f7ce;
+  --color-amber-200: #d1f0a1;
+  --color-amber-500: #65a30d;
+  --color-amber-600: #4d7c0f;
+  --color-amber-700: #3f6212;
+  --color-amber-800: #304a0e;
+  --color-amber-900: #23370a;
+
+  /* Rose & Red remapped to deep juniper & dark moss greens */
+  --color-rose-50: #f0f7f2;
+  --color-rose-100: #dceddf;
+  --color-rose-200: #bcdfc1;
+  --color-rose-500: #378051;
+  --color-rose-600: #29663f;
+  --color-rose-700: #205032;
+  --color-rose-800: #183e26;
+
+  --color-red-50: #f0f7f2;
+  --color-red-100: #dceddf;
+  --color-red-200: #bcdfc1;
+  --color-red-500: #378051;
+  --color-red-600: #29663f;
+  --color-red-700: #205032;
+  --color-red-800: #183e26;
+
+  /* Violet & Purple remapped to pine greens */
+  --color-violet-50: #edf7f1;
+  --color-violet-100: #daf0e2;
+  --color-violet-600: #1d6e3c;
+  --color-violet-700: #17572f;
+
+  --color-purple-50: #edf7f1;
+  --color-purple-100: #daf0e2;
+  --color-purple-600: #1d6e3c;
+  --color-purple-700: #17572f;
+}
+
+body {
+  background-color: #edf7f1;
+  color: #133a21;
+}

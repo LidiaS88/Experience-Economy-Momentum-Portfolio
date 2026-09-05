@@ -8,7 +8,7 @@ export const UniverseSummary: React.FC = () => {
       {/* Header */}
       <div className="p-4 sm:p-5 border-b border-slate-200 bg-slate-50/75 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
         <div className="flex items-center gap-2">
-          <div className="p-2 bg-blue-50 border border-blue-200 rounded-lg text-blue-700">
+          <div className="p-2 bg-emerald-100 border border-emerald-300 rounded-lg text-emerald-800">
             <Layers className="w-5 h-5" />
           </div>
           <div>
@@ -45,7 +45,7 @@ export const UniverseSummary: React.FC = () => {
 
         <div id="stat-benchmark" className="p-3 bg-white rounded-lg border border-slate-200">
           <div className="text-slate-500 font-medium">Benchmark Reference</div>
-          <div className="text-lg font-bold text-blue-700 mt-0.5 flex items-center gap-1.5">
+          <div className="text-lg font-bold text-emerald-700 mt-0.5 flex items-center gap-1.5">
             <TrendingUp className="w-4 h-4" />
             <span>benchmark ticker SPY</span>
           </div>
@@ -97,17 +97,17 @@ export const UniverseSummary: React.FC = () => {
           {/* Benchmark Card */}
           <div
             id="benchmark-card-spy"
-            className="p-3.5 bg-blue-50/50 rounded-lg border border-blue-200 flex flex-col justify-between"
+            className="p-3.5 bg-emerald-50/60 rounded-lg border border-emerald-200 flex flex-col justify-between"
           >
             <div>
               <div className="flex items-center justify-between gap-1 mb-2">
-                <span className="font-bold text-xs text-blue-950">Market Benchmark</span>
-                <span className="text-[10px] font-semibold bg-blue-100 border border-blue-200 px-1.5 py-0.5 rounded text-blue-800">
+                <span className="font-bold text-xs text-emerald-950">Market Benchmark</span>
+                <span className="text-[10px] font-semibold bg-emerald-100 border border-emerald-300 px-1.5 py-0.5 rounded text-emerald-900">
                   Primary Baseline
                 </span>
               </div>
-              <div className="flex items-center justify-between text-xs py-2 px-2.5 bg-white rounded border border-blue-100 mb-2">
-                <span className="font-mono font-bold text-blue-900">{BENCHMARK.ticker}</span>
+              <div className="flex items-center justify-between text-xs py-2 px-2.5 bg-white rounded border border-emerald-200 mb-2">
+                <span className="font-mono font-bold text-emerald-950">{BENCHMARK.ticker}</span>
                 <span className="text-slate-700 text-[11px] font-medium text-right">
                   {BENCHMARK.name}
                 </span>

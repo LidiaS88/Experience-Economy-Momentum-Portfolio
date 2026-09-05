@@ -22,14 +22,14 @@ export const TechnicalIndicatorTest: React.FC<TechnicalIndicatorTestProps> = ({ 
   // Formatting helpers that preserve precision internally while displaying clean rounded values
   const formatCurrency = (val: number | null): React.ReactNode => {
     if (val === null || isNaN(val)) {
-      return <span className="text-amber-700 font-medium text-xs bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200">Insufficient history</span>;
+      return <span className="text-lime-900 font-medium text-xs bg-lime-100 px-1.5 py-0.5 rounded border border-lime-300">Insufficient history</span>;
     }
     return `$${val.toFixed(2)}`;
   };
 
   const formatNumber = (val: number | null, decimals = 2, withSign = false): React.ReactNode => {
     if (val === null || isNaN(val)) {
-      return <span className="text-amber-700 font-medium text-xs bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200">Insufficient history</span>;
+      return <span className="text-lime-900 font-medium text-xs bg-lime-100 px-1.5 py-0.5 rounded border border-lime-300">Insufficient history</span>;
     }
     const sign = withSign && val > 0 ? '+' : '';
     return `${sign}${val.toFixed(decimals)}`;
@@ -37,7 +37,7 @@ export const TechnicalIndicatorTest: React.FC<TechnicalIndicatorTestProps> = ({ 
 
   const formatPercent = (val: number | null, decimals = 2, withSign = false): React.ReactNode => {
     if (val === null || isNaN(val)) {
-      return <span className="text-amber-700 font-medium text-xs bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200">Insufficient history</span>;
+      return <span className="text-lime-900 font-medium text-xs bg-lime-100 px-1.5 py-0.5 rounded border border-lime-300">Insufficient history</span>;
     }
     const percentVal = val * 100;
     const sign = withSign && percentVal > 0 ? '+' : '';
@@ -168,7 +168,7 @@ export const TechnicalIndicatorTest: React.FC<TechnicalIndicatorTestProps> = ({ 
             {metrics.rsi14 !== null && (
               <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded ${
                 isRsiOverbought
-                  ? 'bg-rose-100 text-rose-800'
+                  ? 'bg-emerald-200 text-emerald-950 font-bold'
                   : isRsiOversold
                   ? 'bg-emerald-100 text-emerald-800'
                   : 'bg-slate-100 text-slate-600'
@@ -192,7 +192,7 @@ export const TechnicalIndicatorTest: React.FC<TechnicalIndicatorTestProps> = ({ 
             metrics.trailing60Return !== null && metrics.trailing60Return > 0
               ? 'text-emerald-700'
               : metrics.trailing60Return !== null && metrics.trailing60Return < 0
-              ? 'text-rose-700'
+              ? 'text-emerald-950'
               : 'text-slate-900'
           }`}>
             {formatPercent(metrics.trailing60Return, 2, true)}
