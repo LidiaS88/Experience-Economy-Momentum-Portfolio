@@ -31,11 +31,11 @@ export const MethodologySection: React.FC = () => {
             <p className="text-xs text-slate-600 leading-relaxed">
               The portfolio captures structural consumer spending migration from physical goods to real-world experiences. 
               The eligible universe comprises established equities across five core segments: 
-              <strong className="text-slate-800"> Live Entertainment &amp; Ticketing</strong>, 
-              <strong className="text-slate-800"> Lodging &amp; Boutique Resorts</strong>, 
-              <strong className="text-slate-800"> Cruise Operators &amp; Maritime Leisure</strong>, 
-              <strong className="text-slate-800"> Airlines &amp; Global Transit</strong>, and 
-              <strong className="text-slate-800"> Experiential Dining &amp; Theme Parks</strong>.
+              <strong className="text-slate-800"> Airlines</strong>, 
+              <strong className="text-slate-800"> Hotels, Lodging and Resorts</strong>, 
+              <strong className="text-slate-800"> Booking and Travel Platforms</strong>, 
+              <strong className="text-slate-800"> Cruises, Events, and Leisure</strong>, and 
+              <strong className="text-slate-800"> Entertainment, Dining, and Payments</strong>.
             </p>
           </div>
 
