@@ -30,12 +30,12 @@ export const MethodologySection: React.FC = () => {
             </div>
             <p className="text-xs text-slate-600 leading-relaxed">
               The portfolio captures structural consumer spending migration from physical goods to real-world experiences. 
-              The eligible universe comprises established equities across five core segments: 
-              <strong className="text-slate-800"> Airlines</strong>, 
-              <strong className="text-slate-800"> Hotels, Lodging and Resorts</strong>, 
-              <strong className="text-slate-800"> Booking and Travel Platforms</strong>, 
-              <strong className="text-slate-800"> Cruises, Events, and Leisure</strong>, and 
-              <strong className="text-slate-800"> Entertainment, Dining, and Payments</strong>.
+              The eligible universe comprises established equities across five core segments:{' '}
+              <strong className="text-slate-800">Airlines</strong>,{' '}
+              <strong className="text-slate-800">Hotels, Lodging and Resorts</strong>,{' '}
+              <strong className="text-slate-800">Booking and Travel Platforms</strong>,{' '}
+              <strong className="text-slate-800">Cruises, Events, and Leisure</strong>, and{' '}
+              <strong className="text-slate-800">Entertainment, Dining, and Payments</strong>.
             </p>
           </div>
 

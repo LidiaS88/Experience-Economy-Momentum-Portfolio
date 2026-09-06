@@ -10,11 +10,11 @@ export const PORTFOLIO_UNIVERSE: readonly StockCandidate[] = Object.freeze([
   { ticker: 'LUV', company: 'Southwest Airlines', category: 'Airlines' },
   { ticker: 'ALK', company: 'Alaska Air Group', category: 'Airlines' },
 
-  // Hotels, Lodging, and Resorts
-  { ticker: 'MAR', company: 'Marriott International', category: 'Hotels, Lodging, and Resorts' },
-  { ticker: 'HLT', company: 'Hilton Worldwide Holdings', category: 'Hotels, Lodging, and Resorts' },
-  { ticker: 'H', company: 'Hyatt Hotels', category: 'Hotels, Lodging, and Resorts' },
-  { ticker: 'MGM', company: 'MGM Resorts International', category: 'Hotels, Lodging, and Resorts' },
+  // Hotels, Lodging and Resorts
+  { ticker: 'MAR', company: 'Marriott International', category: 'Hotels, Lodging and Resorts' },
+  { ticker: 'HLT', company: 'Hilton Worldwide Holdings', category: 'Hotels, Lodging and Resorts' },
+  { ticker: 'H', company: 'Hyatt Hotels', category: 'Hotels, Lodging and Resorts' },
+  { ticker: 'MGM', company: 'MGM Resorts International', category: 'Hotels, Lodging and Resorts' },
 
   // Booking and Travel Platforms
   { ticker: 'BKNG', company: 'Booking Holdings', category: 'Booking and Travel Platforms' },

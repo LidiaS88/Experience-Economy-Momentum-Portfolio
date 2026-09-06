@@ -44,11 +44,11 @@ interface PortfolioAnalyticsProps {
 }
 
 const CATEGORY_COLORS: Record<string, string> = {
-  'Live Events': '#047857', // Deep Emerald
-  'Travel': '#10b981',      // Vivid Emerald
-  'Wellness': '#34d399',    // Mint Green
-  'Streaming': '#065f46',   // Forest Green
-  'Dining': '#84cc16',      // Olive / Lime Green
+  'Airlines': '#047857', // Deep Emerald
+  'Hotels, Lodging and Resorts': '#10b981', // Vivid Emerald
+  'Booking and Travel Platforms': '#34d399', // Mint Green
+  'Cruises, Events, and Leisure': '#065f46', // Forest Green
+  'Entertainment, Dining, and Payments': '#84cc16', // Olive / Lime Green
 };
 
 const SIGNAL_COLORS = {
@@ -75,8 +75,8 @@ export const PortfolioAnalytics: React.FC<PortfolioAnalyticsProps> = ({
   // 1. Prepare Weight Distribution Chart Data
   const weightChartData = useMemo(() => {
     return optimizationResult.holdings.map((h) => {
-      const primaryCat = h.category.split(',')[0].trim();
-      const color = CATEGORY_COLORS[primaryCat] || '#6366f1';
+      const primaryCat = h.category;
+      const color = CATEGORY_COLORS[primaryCat] || '#10b981';
       return {
         ticker: h.ticker,
         company: h.company,

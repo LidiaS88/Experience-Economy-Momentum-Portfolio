@@ -125,8 +125,7 @@ export const OptimizedPortfolio: React.FC<OptimizedPortfolioProps> = ({
   const categoryBreakdown = useMemo(() => {
     const map: Record<string, { weight: number; dollars: number; count: number }> = {};
     for (const h of optimizationResult.holdings) {
-      const cat人类 = h.category.split(',')[0].trim();
-      const cat = cat人类;
+      const cat = h.category;
       if (!map[cat]) {
         map[cat] = { weight: 0, dollars: 0, count: 0 };
       }
@@ -504,11 +503,11 @@ export const OptimizedPortfolio: React.FC<OptimizedPortfolioProps> = ({
                   className="px-2.5 py-1.5 bg-slate-50 border border-slate-300 rounded-lg text-xs font-semibold text-slate-700 focus:outline-hidden cursor-pointer"
                 >
                   <option value="ALL">All Categories</option>
-                  <option value="Live Events">Live Events</option>
-                  <option value="Travel">Travel &amp; Lodging</option>
-                  <option value="Wellness">Wellness &amp; Athleisure</option>
-                  <option value="Streaming">Streaming &amp; Interactive</option>
-                  <option value="Dining">Experiential Dining</option>
+                  <option value="Airlines">Airlines</option>
+                  <option value="Hotels, Lodging and Resorts">Hotels, Lodging and Resorts</option>
+                  <option value="Booking and Travel Platforms">Booking and Travel Platforms</option>
+                  <option value="Cruises, Events, and Leisure">Cruises, Events, and Leisure</option>
+                  <option value="Entertainment, Dining, and Payments">Entertainment, Dining, and Payments</option>
                 </select>
 
                 {/* Inclusion Filter */}
@@ -574,7 +573,7 @@ export const OptimizedPortfolio: React.FC<OptimizedPortfolioProps> = ({
                         >
                           {/* 1. Category */}
                           <td className="py-3 px-4 text-slate-600 font-medium whitespace-nowrap">
-                            {h.category.split(',')[0]}
+                            {h.category}
                           </td>
 
                           {/* 2. Ticker */}

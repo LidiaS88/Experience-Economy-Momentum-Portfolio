@@ -4,7 +4,7 @@ A rules-based, educational quantitative portfolio strategy and analytical dashbo
 
 ## Overview
 
-- **Universe**: 25 candidate equities across 5 core Experience Economy sectors (Live Events & Ticketing, Travel & Hospitality, Experiential Retail & Wellness, Theme Parks & Cruise Lines, Interactive Media & Streaming).
+- **Universe**: 20 candidate equities across 5 core Experience Economy sectors (Airlines, Hotels, Lodging and Resorts, Booking and Travel Platforms, Cruises, Events, and Leisure, Entertainment, Dining, and Payments).
 - **Technical Screening**: 4-rule momentum and trend filter (Price > 200 SMA, 50 SMA > 200 SMA, MACD Line > Signal Line, RSI between 40 and 70).
 - **Portfolio Optimization**: Long-only constrained minimum-variance quadratic optimization with a maximum 20.00% single-holding box constraint ($0 \le w_i \le 0.20$, $\sum w_i = 1$) solved via Projected Gradient Descent (PGD).
 - **Benchmarking**: Direct comparative analytics against a 1/N Equal-Weight baseline and the SPY (S&P 500 ETF) benchmark.

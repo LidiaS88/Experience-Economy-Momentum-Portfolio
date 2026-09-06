@@ -83,7 +83,7 @@ export function buildPortfolioReviewObject(
   // Category breakdown calculation
   const categoryMap: Record<string, { weight: number; count: number }> = {};
   for (const h of optimizationResult.holdings) {
-    const cat = h.category.split(',')[0].trim();
+    const cat = h.category;
     if (!categoryMap[cat]) {
       categoryMap[cat] = { weight: 0, count: 0 };
     }
@@ -110,7 +110,7 @@ export function buildPortfolioReviewObject(
     strategy: {
       name: 'Experience Economy Momentum & Minimum-Variance Portfolio',
       thesis:
-        'Capturing structural consumer expenditure shifts toward experiential activities (Live Events, Travel, Wellness, Streaming, Dining) using a 4-rule technical momentum filter (Price > 200 SMA, 50 SMA > 200 SMA, MACD > Signal, RSI in 40-70) combined with long-only constrained minimum-variance quadratic optimization with a 20% single-holding cap on a $1,000,000 baseline capital model.',
+        'Capturing structural consumer expenditure shifts toward experiential activities (Airlines, Hotels, Lodging and Resorts, Booking and Travel Platforms, Cruises, Events, and Leisure, Entertainment, Dining, and Payments) using a 4-rule technical momentum filter (Price > 200 SMA, 50 SMA > 200 SMA, MACD > Signal, RSI in 40-70) combined with long-only constrained minimum-variance quadratic optimization with a 20% single-holding cap on a $1,000,000 baseline capital model.',
       universeSize: Object.keys(portfolioDataMap).length,
       targetCapital: '$1,000,000.00 USD',
       singleHoldingWeightCap: '20.00%',

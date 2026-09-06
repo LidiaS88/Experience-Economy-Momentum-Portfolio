@@ -264,7 +264,7 @@ export const PortfolioReadiness: React.FC<PortfolioReadinessProps> = ({ dataMap 
                   >
                     <span>{ticker}</span>
                     <span className="text-[10px] font-sans font-normal text-emerald-700 bg-emerald-100/80 px-1 rounded">
-                      {item?.category.split(',')[0]}
+                      {item?.category}
                     </span>
                   </span>
                 );
